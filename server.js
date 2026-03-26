@@ -42,7 +42,7 @@ app.use(session({
 }));
 
 // MongoDB connection
-const url = 'mongodb+srv://aka782003_db_user:Bo99UXftaZW8TUCB@cluster0.9nm0lgd.mongodb.net/?appName=Cluster0&ssl=false';
+const url = 'mongodb+srv://aka782003_db_user:Bo99UXftaZW8TUCB@cluster0.9nm0lgd.mongodb.net/?appName=Cluster0&retryWrites=true';
 const client = new MongoClient(url);
 const dbName = 'cryptosphere';
 
@@ -492,15 +492,15 @@ app.post('/api/logout', (req, res) => {
 // Test MongoDB connection
 async function connectToMongo() {
     try {
-        await client.connect();
+        await client.connect({
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            serverSelectionTimeoutMS: 5000
+        });
         console.log('✅ Connected to MongoDB successfully!');
-        
-        const db = client.db(dbName);
-        const collections = await db.listCollections().toArray();
-        console.log('📁 Database ready');
-        
+        // ...
     } catch (error) {
-        console.log('❌ MongoDB connection error:', error.message);
+        console.log('❌ MongoDB connection error:', error);
     }
 }
 
