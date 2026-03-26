@@ -1961,7 +1961,7 @@ if (historyTabBtn2 && assetPanel2 && historyPanel2) {
                 if (balanceData.success) {
                     const newBalance = balanceData.balance + trade.payout;
                     
-                    await fetch('/api/admin/update-balance', {
+                    await fetch('/api/user/update-balance', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ 
