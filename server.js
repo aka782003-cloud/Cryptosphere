@@ -881,6 +881,43 @@ app.post('/api/admin/approve-user', async (req, res) => {
     }
 });
 
+// USER: UPDATE OWN BALANCE (for trading)
+app.post('/api/user/update-balance', async (req, res) => {
+    try {
+        // Check if user is logged in
+        if (!req.session.user) {
+            return res.json({ success: false, message: 'Not logged in' });
+        }
+
+        const { email, balance } = req.body;
+        
+        // Make sure the email matches the logged in user
+        if (email !== req.session.user.email) {
+            return res.json({ success: false, message: 'Not authorized' });
+        }
+
+        const db = client.db(dbName);
+        const users = db.collection('users');
+        
+        // Update user's balance
+        await users.updateOne(
+            { email: email },
+            { $set: { balance: parseFloat(balance) } }
+        );
+
+        console.log(`💰 User ${email} updated balance to $${balance}`);
+
+        res.json({ 
+            success: true, 
+            message: 'Balance updated successfully' 
+        });
+
+    } catch (error) {
+        console.log('❌ Update balance error:', error);
+        res.json({ success: false, message: 'Server error' });
+    }
+});
+
 connectToMongo();
 
 // Start the server
