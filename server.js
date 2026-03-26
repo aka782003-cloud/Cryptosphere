@@ -42,7 +42,7 @@ app.use(session({
 }));
 
 // MongoDB connection
-const url = 'mongodb://localhost:27017';
+const url = 'mongodb+srv://aka782003_db_user:Bo99UXftaZW8TUCB@cluster0.9nm0lgd.mongodb.net/?appName=Cluster0';
 const client = new MongoClient(url);
 const dbName = 'cryptosphere';
 
