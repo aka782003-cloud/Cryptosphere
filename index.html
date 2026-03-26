@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptosphere — Clean & Bold</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0a0b0e;
+            color: #fff;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 20px 100px 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        /* Auth Buttons */
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .auth-btn.login {
+            background: transparent;
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+        }
+
+        .auth-btn.login:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .auth-btn.signup {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+        }
+
+        .auth-btn.signup:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Support */
+        .support-btn {
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 30px;
+            padding: 12px 24px;
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .support-btn:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        /* Stats Row */
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 20px;
+            padding: 25px;
+        }
+
+        .stat-item {
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Bottom Navigation - BIGGER with NO EMOJIS */
+        .bottom-nav {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 60px;
+            padding: 12px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 35px;
+            border: none;
+            background: transparent;
+            color: #6b7280;
+            cursor: pointer;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item:hover {
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Content Sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 2px;
+        }
+
+        /* Coins Grid */
+        .coins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .coin-card {
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .coin-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .coin-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .coin-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #2c2d33;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .coin-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .coin-name h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .coin-name span {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .coin-price {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .coin-change {
+            font-size: 15px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .coin-change.up {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .coin-change.down {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        /* Market Table */
+        .market-table {
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .market-row {
+            display: grid;
+            grid-template-columns: 60px 1.5fr 1fr 1fr 1fr;
+            padding: 18px 25px;
+            border-bottom: 1px solid #2c2d33;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .market-row:last-child {
+            border-bottom: none;
+        }
+
+        .market-row.header {
+            color: #6b7280;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #0a0b0e;
+        }
+
+        .coin-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .coin-cell img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+        }
+
+        /* Assets */
+        .balance-card {
+            background: linear-gradient(135deg, #1a1b1f, #1e1f25);
+            border: 1px solid #2c2d33;
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .balance-label {
+            color: #6b7280;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .balance-amount {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .balance-change {
+            color: #10b981;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .assets-list {
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .asset-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid #2c2d33;
+        }
+
+        .asset-row:last-child {
+            border-bottom: none;
+        }
+
+        .asset-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .asset-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #2c2d33;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .asset-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .asset-details h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .asset-details span {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .asset-value {
+            text-align: right;
+        }
+
+        .asset-value .amount {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .asset-value .usd {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        /* Trade Section */
+        .trade-card {
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 25px;
+            padding: 50px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .trade-card h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .trade-card p {
+            color: #6b7280;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .trade-btn {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            border-radius: 40px;
+            padding: 15px 40px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .trade-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 30px;
+            padding: 40px;
+            width: 90%;
+            max-width: 420px;
+        }
+
+        .modal-content h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 15px 20px;
+            background: #2c2d33;
+            border: 1px solid #3a3b42;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .modal-content button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-content button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .modal-close {
+            text-align: center;
+            margin-top: 20px;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .modal-close:hover {
+            color: #3b82f6;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 12px;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .toast.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .toast-icon {
+            font-size: 20px;
+        }
+
+        .toast-message {
+            color: white;
+            font-size: 14px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .logo-wrapper {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .stats {
+                flex-wrap: wrap;
+                padding: 15px;
+            }
+            
+            .stat-item {
+                flex: 1 1 40%;
+            }
+            
+            .coins-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .bottom-nav {
+                width: 95%;
+                padding: 8px;
+            }
+            
+            .nav-item {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+            
+            .market-row {
+                grid-template-columns: 40px 1fr 1fr 1fr;
+                padding: 12px 15px;
+                font-size: 13px;
+            }
+            
+            .market-row.header {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with visible auth buttons -->
+        <div class="header">
+            <div class="logo-wrapper">
+                <div class="logo" id="logo">Cryptosphere</div>
+                <div class="auth-buttons">
+                    <button class="auth-btn login" onclick="openModal('login')">Log In</button>
+                    <button class="auth-btn signup" onclick="openModal('signup')">Sign Up</button>
+                </div>
+            </div>
+            <a href="#" class="support-btn" id="supportBtn">
+                <span>💬</span> 24/7 Support
+            </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Market Cap</div>
+                <div class="stat-value" id="marketCap">$2.14T</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">24h Volume</div>
+                <div class="stat-value" id="volume">$82.3B</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">BTC Dominance</div>
+                <div class="stat-value" id="btcDom">51.8%</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Active Coins</div>
+                <div class="stat-value" id="coinCount">10.5K</div>
+            </div>
+        </div>
+
+        <!-- Home Section -->
+        <div id="homeSection" class="section active">
+            <div class="section-title">Popular Coins</div>
+            <div class="coins-grid" id="coinsGrid">
+                <!-- Coins will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Market Section -->
+        <div id="marketSection" class="section">
+            <div class="section-title">Market Overview</div>
+            <div class="market-table" id="marketTable">
+                <div class="market-row header">
+                    <div>#</div>
+                    <div>Coin</div>
+                    <div>Price</div>
+                    <div>24h Change</div>
+                    <div>Market Cap</div>
+                </div>
+                <div id="marketRows">
+                    <!-- Market rows will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Trade Section -->
+<div id="tradeSection" class="section">
+    <!-- Hidden price storage -->
+    <div style="display: none;">
+        <span id="btcPrice">45000</span>
+        <span id="ethPrice">3000</span>
+    </div>
+
+    <div style="display: flex; gap: 20px;">
+        
+        <!-- LEFT SIDE - Trading Panel -->
+        <div style="flex: 2;">
+            <!-- Trading Pair Selector -->
+            <div style="background: #1a1b1f; border: 1px solid #2c2d33; border-radius: 16px; padding: 15px 20px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <select id="tradingPair" style="background: #2c2d33; border: 1px solid #3a3b42; color: white; padding: 12px 20px; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer;">
+                            <option value="BTC">BTC/USDT</option>
+                            <option value="ETH">ETH/USDT</option>
+                            <option value="XRP">XRP/USDT</option>
+                            <option value="BNB">BNB/USDT</option>
+                            <option value="SOL">SOL/USDT</option>
+                            <option value="DOGE">DOGE/USDT</option>
+                            <option value="ADA">ADA/USDT</option>
+                            <option value="LINK">LINK/USDT</option>
+                            <option value="LTC">LTC/USDT</option>
+                            <option value="AVAX">AVAX/USDT</option>
+                        </select>
+                    </div>
+                    <button id="chartBtn" style="background: transparent; border: 1px solid #3a3b42; border-radius: 12px; padding: 10px 15px; cursor: pointer; transition: all 0.2s;" 
+                            onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#3a3b42'">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 3V21H21" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M7 15L10 10L13 13L19 5" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M19 5H14" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M19 5V10" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Amount Section -->
+            <div style="background: #1a1b1f; border: 1px solid #2c2d33; border-radius: 16px; padding: 20px; margin-bottom: 20px;">
+                <div style="color: #6b7280; font-size: 12px; margin-bottom: 8px;">Amount (USDT)</div>
+                <input type="number" id="tradeAmount" placeholder="0.00" style="width: 100%; padding: 12px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 8px; color: white; font-size: 16px; margin-bottom: 15px;">
+                <div style="display: flex; gap: 10px;">
+                    <button class="amount-pct" data-pct="10" style="flex: 1; padding: 8px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 6px; color: white; cursor: pointer;">10%</button>
+                    <button class="amount-pct" data-pct="25" style="flex: 1; padding: 8px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 6px; color: white; cursor: pointer;">25%</button>
+                    <button class="amount-pct" data-pct="50" style="flex: 1; padding: 8px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 6px; color: white; cursor: pointer;">50%</button>
+                    <button class="amount-pct" data-pct="75" style="flex: 1; padding: 8px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 6px; color: white; cursor: pointer;">75%</button>
+                    <button class="amount-pct" data-pct="100" style="flex: 1; padding: 8px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 6px; color: white; cursor: pointer;">100%</button>
+                </div>
+                <div style="color: #6b7280; font-size: 12px; margin-top: 10px;">Available: <span id="tradeBalance">$0.00</span></div>
+            </div>
+
+            <!-- Time Selection -->
+<div style="background: #1a1b1f; border: 1px solid #2c2d33; border-radius: 16px; padding: 20px; margin-bottom: 20px;">
+    <div style="color: white; font-size: 14px; font-weight: bold; margin-bottom: 12px;">EXPIRY TIME (12X)</div>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+        <button class="time-btn" data-time="30" style="padding: 10px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 8px; color: white; cursor: pointer;">30s</button>
+        <button class="time-btn" data-time="60" style="padding: 10px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 8px; color: white; cursor: pointer;">60s</button>
+        <button class="time-btn" data-time="120" style="padding: 10px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 8px; color: white; cursor: pointer;">120s</button>
+        <button class="time-btn" data-time="180" style="padding: 10px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 8px; color: white; cursor: pointer;">180s</button>
+        <button class="time-btn" data-time="240" style="padding: 10px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 8px; color: white; cursor: pointer;">240s</button>
+        <button class="time-btn" data-time="300" style="padding: 10px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 8px; color: white; cursor: pointer;">300s</button>
+    </div>
+</div>
+
+            <!-- Trade Buttons -->
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <button id="buyLongBtn" style="flex: 1; padding: 15px; background: #10b981; border: none; border-radius: 12px; color: white; font-weight: bold; font-size: 16px; cursor: pointer;">BUY / LONG</button>
+                <button id="sellShortBtn" style="flex: 1; padding: 15px; background: #ef4444; border: none; border-radius: 12px; color: white; font-weight: bold; font-size: 16px; cursor: pointer;">SELL / SHORT</button>
+            </div>
+
+            <!-- Active & History Tabs -->
+            <div style="background: #1a1b1f; border: 1px solid #2c2d33; border-radius: 16px;">
+                <div style="display: flex; border-bottom: 1px solid #2c2d33;">
+                    <button id="activeTabBtn" style="flex: 1; padding: 12px; background: transparent; border: none; color: white; cursor: pointer; font-weight: bold;">Active</button>
+                    <button id="historyTabBtn" style="flex: 1; padding: 12px; background: transparent; border: none; color: #6b7280; cursor: pointer;">History</button>
+                </div>
+                <div id="activePanel" style="padding: 15px; max-height: 250px; overflow-y: auto;">
+                    <div style="text-align: center; color: #6b7280; padding: 20px;">No active trades</div>
+                </div>
+                <div id="historyPanel" style="display: none; padding: 15px; max-height: 250px; overflow-y: auto;">
+                    <div style="text-align: center; color: #6b7280; padding: 20px;">No trade history</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE - Real Binance Order Book -->
+        <div style="flex: 1;">
+            <div style="background: #1a1b1f; border: 1px solid #2c2d33; border-radius: 16px;">
+                <div style="padding: 15px; border-bottom: 1px solid #2c2d33;">
+                    <div style="color: white; font-weight: bold;">Order Book</div>
+                    <div style="color: #6b7280; font-size: 12px;" id="orderBookPair">BTC/USDT</div>
+                </div>
+                <div id="orderBookContent" style="padding: 15px; max-height: 500px; overflow-y: auto;">
+                    <div style="text-align: center; color: #6b7280; padding: 20px;">Loading orders from Binance...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trade Confirmation Modal -->
+<div id="confirmModal" class="modal">
+    <div class="modal-content" style="max-width: 360px; border-radius: 24px; background: linear-gradient(135deg, #1a1b1f, #1e1f25); border: 1px solid #2c2d33;">
+        <!-- Header with X button -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #2c2d33;">
+            <div style="font-size: 20px; font-weight: 600; background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Confirm Order</div>
+            <button onclick="closeConfirmModal()" style="background: #2c2d33; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #9ca3af; font-size: 18px; transition: all 0.2s;" onmouseover="this.style.background='#ef4444'; this.style.color='white'" onmouseout="this.style.background='#2c2d33'; this.style.color='#9ca3af';">✕</button>
+        </div>
+        
+        <!-- Title with direction color -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div id="confirmTitle" style="font-size: 24px; font-weight: bold; margin-bottom: 5px;"></div>
+            <div style="font-size: 12px; color: #6b7280;">Please confirm your trade details</div>
+        </div>
+        
+        <!-- Trade details card -->
+        <div style="background: #0a0b0e; border-radius: 16px; padding: 20px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <span style="color: #6b7280;">Amount</span>
+                <span id="confirmAmount" style="font-weight: 600; color: #fff; font-size: 18px;">$0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <span style="color: #6b7280;">Time</span>
+                <span id="confirmTime" style="font-weight: 600; color: #fff;">0s</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: #6b7280;">Trading Pair</span>
+                <span id="confirmPair" style="font-weight: 600; color: #fff;">BTC/USDT</span>
+            </div>
+        </div>
+        
+        <!-- Action buttons -->
+        <div style="display: flex; gap: 12px;">
+            <button onclick="closeConfirmModal()" style="flex: 1; padding: 14px; background: #ef4444; border: none; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444';">Cancel</button>
+            <button id="confirmTradeButton" onclick="confirmTrade()" style="flex: 1; padding: 14px; background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<!-- Chart Modal -->
+<div id="chartModal" class="modal">
+    <div class="modal-content" style="max-width: 600px;">
+        <span class="close" onclick="closeChartModal()">&times;</span>
+        <h3 id="chartModalTitle" style="margin-bottom: 20px;">BTC/USDT Chart</h3>
+        <div id="chartDisplay" style="background: #2c2d33; height: 300px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+            <div style="text-align: center;">
+                <div style="font-size: 48px;">📊</div>
+                <div id="chartPriceDisplay" style="font-size: 20px; font-weight: bold; margin-top: 10px;">$0.00</div>
+                <div id="chartChangeDisplay" style="margin-top: 5px;">Loading...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!-- Assets Section -->
+<div id="assetsSection" class="section">
+    <div class="section-title">Your Assets</div>
+    
+    <!-- Tabs -->
+    <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #2c2d33;">
+        <button id="assetTabBtn" style="padding: 10px 20px; background: transparent; border: none; color: white; cursor: pointer; font-weight: bold; border-bottom: 2px solid #3b82f6;">Asset</button>
+        <button id="historyTabBtnAsset" style="padding: 10px 20px; background: transparent; border: none; color: #6b7280; cursor: pointer;">History</button>
+    </div>
+    
+    <!-- Asset Panel -->
+    <div id="assetPanel">
+        <div class="assets-list" id="assetsList">
+            <div class="asset-row">Loading...</div>
+        </div>
+    </div>
+    
+    <!-- History Panel (hidden by default) -->
+    <div id="historyPanelAsset" style="display: none;">
+        <div class="market-table-container">
+            <div id="transactionHistoryList" class="assets-list">
+                <div class="asset-row" style="text-align: center; color: #6b7280;">No transactions yet</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!-- Bottom Navigation - BIGGER with NO EMOJIS -->
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="switchSection('home')">Home</button>
+            <button class="nav-item" onclick="switchSection('market')">Market</button>
+            <button class="nav-item" onclick="switchSection('trade')">Trade</button>
+            <button class="nav-item" onclick="switchSection('assets')">Assets</button>
+        </div>
+
+        <!-- Login Modal -->
+        <div class="modal" id="loginModal">
+            <div class="modal-content">
+                <h2>Welcome Back</h2>
+                <input type="email" placeholder="Email" id="loginEmail">
+                <input type="password" placeholder="Password" id="loginPassword">
+                <button onclick="handleLogin()">Log In</button>
+                <div class="modal-close" onclick="closeModal('loginModal')">Close</div>
+            </div>
+        </div>
+
+        <!-- Signup Modal -->
+<div class="modal" id="signupModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('signupModal')">&times;</span>
+        <h2>Create Account</h2>
+        
+        <input type="text" placeholder="Full Name" id="signupName">
+        <input type="email" placeholder="Email" id="signupEmail">
+        <input type="password" placeholder="Password" id="signupPassword">
+        <input type="password" placeholder="Confirm Password" id="signupConfirm">
+        
+        <!-- KYC Section -->
+        <div style="margin-top: 15px;">
+            <label style="color: #9ca3af; display: block; margin-bottom: 5px;">KYC Document Type</label>
+            <select id="kycType" style="width: 100%; padding: 10px; background: #2c2d33; border: 1px solid #3a3b42; color: white; border-radius: 10px;">
+                <option value="passport">Passport</option>
+                <option value="drivers_license">Driver's License</option>
+            </select>
+        </div>
+        
+        <input type="text" placeholder="Document Number" id="kycNumber" style="margin-top: 10px;">
+        
+        <div style="margin-top: 10px;">
+            <label style="color: #9ca3af; display: block; margin-bottom: 5px;">Upload Document Image</label>
+            <input type="file" id="kycFile" accept="image/*" style="width: 100%; padding: 10px; background: #2c2d33; border: 1px solid #3a3b42; color: white; border-radius: 10px;">
+            <small style="color: #6b7280;">Upload a photo of your passport or driver's license</small>
+        </div>
+        
+        <button onclick="handleSignup()" style="margin-top: 20px;">Sign Up</button>
+    </div>
+</div>
+    </div>
+
+    <script>
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) existingToast.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = '';
+            if (type === 'success') icon = '✅';
+            if (type === 'error') icon = '❌';
+            if (type === 'info') icon = 'ℹ️';
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${icon}</div>
+                <div class="toast-message">${message}</div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Trading Variables
+let selectedTradeTime = 30;
+let activeTrades = [];
+let tradeHistory = [];
+let currentBalance = 0;
+let userEmail = null;
+
+// Price storage for all pairs
+let cryptoPrices = {
+    BTC: 0,
+    ETH: 0,
+    XRP: 0,
+    BNB: 0,
+    SOL: 0,
+    DOGE: 0,
+    ADA: 0,
+    LINK: 0,
+    LTC: 0,
+    AVAX: 0
+};
+
+// Check if win mode is enabled
+async function checkWinMode() {
+    try {
+        const response = await fetch('/api/admin/win-mode');
+        const data = await response.json();
+        console.log('Win mode data:', data);
+        return { winMode: data.winMode || false, profitPercent: data.profitPercent || 2 };
+    } catch (error) {
+        console.log('Error checking win mode:', error);
+        return { winMode: false, profitPercent: 2 };
+    }
+}
+
+// Load user balance
+async function loadUserBalance() {
+    try {
+        const response = await fetch('/api/user/balance');
+        const data = await response.json();
+        
+        if (data.success) {
+            currentBalance = data.balance;
+            document.getElementById('tradeBalance').innerHTML = `$${currentBalance.toLocaleString()}`;
+            userEmail = data.email;
+        } else {
+            // Not logged in
+            document.getElementById('tradeBalance').innerHTML = '$0.00';
+        }
+    } catch (error) {
+        console.log('Error loading balance:', error);
+    }
+}
+
+// Display active trades
+function displayActiveTrades() {
+    const container = document.getElementById('activePanel');
+    
+    if (!container) {
+        console.log('activePanel not found');
+        return;
+    }
+    
+    if (activeTrades.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: #6b7280; padding: 20px;">No active trades</div>';
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    activeTrades.forEach(trade => {
+        const timeLeft = Math.max(0, Math.ceil((trade.expiryTime - Date.now()) / 1000));
+        const directionColor = trade.direction === 'long' ? '#10b981' : '#ef4444';
+        const directionText = trade.direction === 'long' ? 'BUY' : 'SELL';
+        
+        const div = document.createElement('div');
+        div.style.cssText = 'background: #2c2d33; padding: 12px; border-radius: 8px; margin-bottom: 10px;';
+        div.innerHTML = `
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span style="color: white;">${trade.pair}/USDT - ${directionText}</span>
+                <span style="color: ${directionColor};">$${trade.amount}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: #6b7280;">Entry: $${trade.entryPrice}</span>
+                <span style="color: #f59e0b;">⏱️ ${timeLeft}s</span>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+    
+    // Update every second
+    setTimeout(displayActiveTrades, 1000);
+}
+
+// Load balance specifically for Trade tab
+async function loadTradeBalance() {
+    try {
+        const response = await fetch('/api/user/balance');
+        const data = await response.json();
+        
+        console.log('Trade balance response:', data);
+        
+        if (data.success) {
+            document.getElementById('tradeBalance').innerHTML = `$${data.balance.toLocaleString()}`;
+            console.log('Trade balance set to:', data.balance);
+        } else {
+            document.getElementById('tradeBalance').innerHTML = '$0.00';
+            console.log('Not logged in or error');
+        }
+    } catch (error) {
+        console.log('Error loading trade balance:', error);
+        document.getElementById('tradeBalance').innerHTML = '$0.00';
+    }
+}
+
+    // Switch sections
+    function switchSection(section) {
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    event.currentTarget.classList.add('active');
+
+    document.querySelectorAll('.section').forEach(s => {
+        s.classList.remove('active');
+    });
+    document.getElementById(section + 'Section').classList.add('active');
+    
+    if (section === 'assets') {
+        loadUserBalance();
+    }
+    
+    if (section === 'trade') {
+        loadTradeBalance(); 
+        updatePriceForPair();
+    }
+}
+    
+// Load transaction history
+async function loadTransactionHistory() {
+    try {
+        const response = await fetch('/api/user/transactions');
+        const data = await response.json();
+        
+        const container = document.getElementById('transactionHistoryList');
+        
+        if (!container) return;
+        
+        if (!data.success || data.transactions.length === 0) {
+            container.innerHTML = '<div style="text-align: center; color: #6b7280; padding: 20px;">No transactions yet</div>';
+            return;
+        }
+        
+        container.innerHTML = '';
+        
+        data.transactions.forEach(tx => {
+            const date = new Date(tx.createdAt).toLocaleString();
+            const amount = tx.amount.toLocaleString();
+            
+            // Set color based on type
+            const isDeposit = tx.type === 'deposit';
+            const color = isDeposit ? '#10b981' : '#ef4444';
+            const sign = isDeposit ? '+' : '-';
+            const typeText = isDeposit ? 'DEPOSIT' : 'WITHDRAW';
+            
+            const div = document.createElement('div');
+            div.style.padding = '12px';
+            div.style.borderBottom = '1px solid #2c2d33';
+            div.style.display = 'flex';
+            div.style.justifyContent = 'space-between';
+            div.style.alignItems = 'center';
+            div.innerHTML = `
+                <div>
+                    <div style="color: ${color}; font-weight: 600;">${typeText}</div>
+                    <div style="font-size: 11px; color: #6b7280;">${date}</div>
+                </div>
+                <div style="color: ${color}; font-weight: 600;">${sign}$${amount}</div>
+            `;
+            container.appendChild(div);
+        });
+        
+    } catch (error) {
+        console.log('Error loading transactions:', error);
+        const container = document.getElementById('transactionHistoryList');
+        if (container) {
+            container.innerHTML = '<div style="text-align: center; color: #ef4444; padding: 20px;">Error loading transactions</div>';
+        }
+    }
+}
+
+// Simple direct click handler for History tab
+const historyButton = document.getElementById('historyTabBtnAsset');
+const assetButton = document.getElementById('assetTabBtn');
+const assetPanel = document.getElementById('assetPanel');
+const historyPanel = document.getElementById('historyPanelAsset');
+
+if (historyButton) {
+    historyButton.onclick = function() {
+        // Switch panels
+        assetPanel.style.display = 'none';
+        historyPanel.style.display = 'block';
+        
+        // Update button styles
+        this.style.color = 'white';
+        this.style.borderBottom = '2px solid #3b82f6';
+        assetButton.style.color = '#6b7280';
+        assetButton.style.borderBottom = 'none';
+        
+        console.log('History tab clicked - switching to history panel');
+        loadTransactionHistory();
+    };
+}
+
+if (assetButton) {
+    assetButton.onclick = function() {
+        // Switch panels
+        assetPanel.style.display = 'block';
+        historyPanel.style.display = 'none';
+        
+        // Update button styles
+        this.style.color = 'white';
+        this.style.borderBottom = '2px solid #3b82f6';
+        historyButton.style.color = '#6b7280';
+        historyButton.style.borderBottom = 'none';
+        
+        console.log('Asset tab clicked - switching to asset panel');
+    };
+}
+
+    // Modal functions
+    function openModal(type) {
+        document.getElementById(type + 'Modal').classList.add('active');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+    }
+
+    // Support - Telegram
+    document.getElementById('supportBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open('https://t.me/cryptosphere_support', '_blank');
+    });
+
+    // Check if user is logged in
+    async function checkLoginStatus() {
+        try {
+            const response = await fetch('/api/me');
+            const data = await response.json();
+            
+            if (data.loggedIn) {
+                console.log('👤 Logged in as:', data.user.email);
+                const authButtons = document.querySelector('.auth-buttons');
+                if (authButtons) {
+                    authButtons.innerHTML = `
+                        <span style="color: #3b82f6; font-weight: 600; margin-right: 10px;">Welcome, ${data.user.name}</span>
+                        <button onclick="logout()" style="
+                            background: transparent;
+                            border: 1px solid #3b82f6;
+                            color: #3b82f6;
+                            padding: 5px 15px;
+                            border-radius: 20px;
+                            cursor: pointer;
+                            font-size: 13px;
+                        ">Logout</button>
+                    `;
+                }
+            } else {
+                console.log('👤 Not logged in');
+            }
+        } catch (error) {
+            console.log('Error checking login status:', error);
+        }
+    }
+
+    // Logout function
+    async function logout() {
+        try {
+            const response = await fetch('/api/logout', {
+                method: 'POST'
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                showToast('Logged out successfully', 'success');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                showToast('Logout failed', 'error');
+            }
+        } catch (error) {
+            showToast('Error logging out', 'error');
+            console.log('Error:', error);
+        }
+    }
+
+    // Login handler
+    function handleLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        if (!email || !password) {
+            showToast('Please fill all fields', 'error');
+            return;
+        }
+
+        fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast(data.message, 'success');
+                closeModal('loginModal');
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                showToast(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            showToast('Error connecting to server', 'error');
+            console.log('Error:', error);
+        });
+    }
+
+    // Update price display for the selected pair
+function updatePriceForPair() {
+    const selectedPair = document.getElementById('tradingPair').value;
+    const currentPriceDisplay = document.getElementById('currentPriceDisplay');
+    const highLowDisplay = document.getElementById('highLowDisplay');
+    
+    const price = cryptoPrices[selectedPair] || 0;
+    
+    if (currentPriceDisplay) {
+        currentPriceDisplay.innerHTML = `$${price.toLocaleString()}`;
+    }
+    
+    if (highLowDisplay && price > 0) {
+        const high = price * 1.02;
+        const low = price * 0.98;
+        highLowDisplay.innerHTML = `$${high.toFixed(2)} / $${low.toFixed(2)}`;
+    }
+    
+    console.log(`Display ${selectedPair} price:`, price);
+}
+
+    // Signup handler with file upload
+function handleSignup() {
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const pass = document.getElementById('signupPassword').value;
+    const confirm = document.getElementById('signupConfirm').value;
+    const kycType = document.getElementById('kycType').value;
+    const kycNumber = document.getElementById('kycNumber').value;
+    const kycFile = document.getElementById('kycFile').files[0];
+
+    if (!name || !email || !pass) {
+        showToast('Please fill all fields', 'error');
+        return;
+    }
+
+    if (pass !== confirm) {
+        showToast('Passwords do not match', 'error');
+        return;
+    }
+
+    if (!kycNumber) {
+        showToast('Please enter your KYC document number', 'error');
+        return;
+    }
+
+    if (!kycFile) {
+        showToast('Please upload your KYC document image', 'error');
+        return;
+    }
+
+    // Create FormData to send file
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('password', pass);
+    formData.append('kycType', kycType);
+    formData.append('kycNumber', kycNumber);
+    formData.append('kycFile', kycFile);
+
+    fetch('/api/signup-with-kyc', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(data.message, 'success');
+            closeModal('signupModal');
+            // Clear the form
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signupConfirm').value = '';
+            document.getElementById('kycNumber').value = '';
+            document.getElementById('kycFile').value = '';
+        } else {
+            showToast(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        showToast('Error connecting to server', 'error');
+        console.log('Error:', error);
+    });
+}
+
+    // Load user balance for Assets page
+async function loadUserBalance() {
+    try {
+        const response = await fetch('/api/user/balance');
+        const data = await response.json();
+        
+        if (data.success) {
+            const assetsList = document.getElementById('assetsList');
+            if (assetsList) {
+                assetsList.innerHTML = `
+                    <div class="asset-row">
+                        <div class="asset-info">
+                            <div class="asset-icon">
+                                <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover;">
+                            </div>
+                            <div class="asset-details">
+                                <h4>Tether</h4>
+                                <span>USDT</span>
+                            </div>
+                        </div>
+                        <div class="asset-value">
+                            <div class="amount">$${data.balance.toLocaleString()}</div>
+                            <div class="usd">USDT</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    } catch (error) {
+        console.log('Error loading balance:', error);
+    }
+}
+
+    // Close modal on outside click
+    window.onclick = (e) => {
+        if (e.target.classList.contains('modal')) {
+            e.target.classList.remove('active');
+        }
+    };
+
+// Fetch real Binance order book
+async function fetchBinanceOrderBook(symbol) {
+    try {
+        // Convert BTC/USDT to BTCUSDT format for Binance
+        let binanceSymbol = symbol + 'USDT';
+        if (symbol === 'BTC') binanceSymbol = 'BTCUSDT';
+        if (symbol === 'ETH') binanceSymbol = 'ETHUSDT';
+        if (symbol === 'XRP') binanceSymbol = 'XRPUSDT';
+        if (symbol === 'BNB') binanceSymbol = 'BNBUSDT';
+        if (symbol === 'SOL') binanceSymbol = 'SOLUSDT';
+        if (symbol === 'DOGE') binanceSymbol = 'DOGEUSDT';
+        if (symbol === 'ADA') binanceSymbol = 'ADAUSDT';
+        if (symbol === 'LINK') binanceSymbol = 'LINKUSDT';
+        if (symbol === 'LTC') binanceSymbol = 'LTCUSDT';
+        if (symbol === 'AVAX') binanceSymbol = 'AVAXUSDT';
+        
+        const response = await fetch(`https://api.binance.com/api/v3/depth?symbol=${binanceSymbol}&limit=10`);
+        const data = await response.json();
+        
+        // Display order book
+        const container = document.getElementById('orderBookContent');
+        
+        // Get bids (buy orders) and asks (sell orders)
+        const bids = data.bids.slice(0, 8);
+        const asks = data.asks.slice(0, 8);
+        
+        let html = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <div style="color: #ef4444; font-size: 12px; margin-bottom: 10px;">SELL ORDERS</div>
+                    <div style="font-size: 11px; color: #6b7280; margin-bottom: 5px;">Price (USDT) | Amount</div>
+        `;
+        
+        asks.forEach(ask => {
+            html += `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <span style="color: #ef4444;">${parseFloat(ask[0]).toFixed(2)}</span>
+                    <span>${parseFloat(ask[1]).toFixed(4)}</span>
+                </div>
+            `;
+        });
+        
+        html += `</div><div>
+                    <div style="color: #10b981; font-size: 12px; margin-bottom: 10px;">BUY ORDERS</div>
+                    <div style="font-size: 11px; color: #6b7280; margin-bottom: 5px;">Price (USDT) | Amount</div>
+        `;
+        
+        bids.forEach(bid => {
+            html += `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <span style="color: #10b981;">${parseFloat(bid[0]).toFixed(2)}</span>
+                    <span>${parseFloat(bid[1]).toFixed(4)}</span>
+                </div>
+            `;
+        });
+        
+        html += `</div></div>`;
+        container.innerHTML = html;
+        
+    } catch (error) {
+        console.log('Error fetching order book:', error);
+        document.getElementById('orderBookContent').innerHTML = '<div style="text-align: center; color: #6b7280; padding: 20px;">Error loading orders</div>';
+    }
+}
+
+// Percentage buttons for amount
+function setupPercentageButtons() {
+    const amountInput = document.getElementById('tradeAmount');
+    const balanceSpan = document.getElementById('tradeBalance');
+    
+    document.querySelectorAll('.amount-pct').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const percent = parseFloat(this.getAttribute('data-pct'));
+            // Get current balance from the displayed text (remove $ and commas)
+            const balanceText = balanceSpan.innerText;
+            const balance = parseFloat(balanceText.replace('$', '').replace(',', ''));
+            
+            if (!isNaN(balance) && balance > 0) {
+                const amount = (balance * percent / 100).toFixed(2);
+                amountInput.value = amount;
+            }
+        });
+    });
+}
+
+// Time buttons - select expiry time
+function setupTimeButtons() {
+    document.querySelectorAll('.time-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active style from all time buttons
+            document.querySelectorAll('.time-btn').forEach(b => {
+                b.style.background = '#2c2d33';
+                b.style.border = '1px solid #3a3b42';
+            });
+            
+            // Highlight selected button
+            this.style.background = '#3b82f6';
+            this.style.border = '1px solid #3b82f6';
+            
+            // Store selected time
+            selectedTradeTime = parseInt(this.getAttribute('data-time'));
+            console.log('Selected time:', selectedTradeTime, 'seconds');
+        });
+    });
+}
+
+// Update order book when pair changes
+document.getElementById('tradingPair').addEventListener('change', function() {
+    const symbol = this.value;
+    document.getElementById('orderBookPair').innerHTML = `${symbol}/USDT`;
+    fetchBinanceOrderBook(symbol);
+});
+
+// Initial order book load
+fetchBinanceOrderBook('BTC');
+// Refresh order book every 5 seconds
+setInterval(() => {
+    const symbol = document.getElementById('tradingPair').value;
+    fetchBinanceOrderBook(symbol);
+}, 5000);
+
+    // Fetch crypto data
+    async function fetchData() {
+        try {
+            const globalRes = await fetch('https://api.coingecko.com/api/v3/global');
+            const globalData = await globalRes.json();
+            
+            document.getElementById('marketCap').textContent = 
+                '$' + (globalData.data.total_market_cap.usd / 1e12).toFixed(2) + 'T';
+            document.getElementById('volume').textContent = 
+                '$' + (globalData.data.total_volume.usd / 1e9).toFixed(2) + 'B';
+            document.getElementById('btcDom').textContent = 
+                globalData.data.market_cap_percentage.btc.toFixed(1) + '%';
+            document.getElementById('coinCount').textContent = 
+                (globalData.data.active_cryptocurrencies / 1000).toFixed(1) + 'K';
+
+            const coinsRes = await fetch(
+                'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false'
+            );
+            const coins = await coinsRes.json();
+
+            const coinsGrid = document.getElementById('coinsGrid');
+            if (coinsGrid) {
+                coinsGrid.innerHTML = '';
+                coins.slice(0, 12).forEach(coin => {
+                    const changeClass = coin.price_change_percentage_24h >= 0 ? 'up' : 'down';
+                    const changeSymbol = coin.price_change_percentage_24h >= 0 ? '▲' : '▼';
+                    
+                    const card = document.createElement('div');
+                    card.className = 'coin-card';
+                    card.innerHTML = `
+                        <div class="coin-header">
+                            <div class="coin-icon">
+                                <img src="${coin.image}" alt="${coin.name}">
+                            </div>
+                            <div class="coin-name">
+                                <h4>${coin.symbol.toUpperCase()}</h4>
+                                <span>${coin.name}</span>
+                            </div>
+                        </div>
+                        <div class="coin-price">$${coin.current_price.toLocaleString()}</div>
+                        <div class="coin-change ${changeClass}">
+                            ${changeSymbol} ${Math.abs(coin.price_change_percentage_24h || 0).toFixed(2)}%
+                        </div>
+                    `;
+                    coinsGrid.appendChild(card);
+                });
+            }
+
+            const marketRows = document.getElementById('marketRows');
+            if (marketRows) {
+                marketRows.innerHTML = '';
+                coins.slice(0, 30).forEach((coin, index) => {
+                    const changeClass = coin.price_change_percentage_24h >= 0 ? 'up' : 'down';
+                    const changeSymbol = coin.price_change_percentage_24h >= 0 ? '▲' : '▼';
+                    
+                    const row = document.createElement('div');
+                    row.className = 'market-row';
+                    row.innerHTML = `
+                        <div>${index + 1}</div>
+                        <div class="coin-cell">
+                            <img src="${coin.image}" alt="${coin.name}">
+                            ${coin.symbol.toUpperCase()}
+                        </div>
+                        <div>$${coin.current_price.toLocaleString()}</div>
+                        <div class="${changeClass}">${changeSymbol} ${Math.abs(coin.price_change_percentage_24h || 0).toFixed(2)}%</div>
+                        <div>$${(coin.market_cap / 1e9).toFixed(2)}B</div>
+                    `;
+                    marketRows.appendChild(row);
+                });
+            }
+        } catch (error) {
+            console.log('Error fetching data:', error);
+        }
+    }
+
+    // Initial load
+    updateRealPrices();
+    checkLoginStatus();
+    fetchData();
+    setInterval(fetchData, 60000);
+    setupPercentageButtons();
+    setupTimeButtons();
+    setInterval(updateRealPrices, 10000);
+    loadTradesFromDB();
+    checkWinMode();
+
+    // Variables to store pending trade
+let pendingTrade = {
+    direction: null,
+    amount: 0,
+    pair: null,
+    time: 0
+};
+
+// Open confirmation modal
+function openTradeConfirmation(direction) {
+    // Check if account is frozen first
+    fetch('/api/user/status')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.frozen) {
+                showToast('Your account is frozen. You cannot place trades. Please contact support.', 'error');
+                return;
+            }
+            
+            // Continue with normal trade flow
+            const amount = parseFloat(document.getElementById('tradeAmount').value);
+            const pair = document.getElementById('tradingPair').value;
+            const time = selectedTradeTime;
+            
+            if (!amount || amount <= 0) {
+                showToast('Please enter a valid amount', 'error');
+                return;
+            }
+            
+            const balanceText = document.getElementById('tradeBalance').innerText;
+            const balance = parseFloat(balanceText.replace('$', '').replace(',', ''));
+            
+            if (amount > balance) {
+                showToast(`Insufficient balance! Your balance: $${balance}`, 'error');
+                return;
+            }
+            
+            pendingTrade = {
+                direction: direction,
+                amount: amount,
+                pair: pair,
+                time: time
+            };
+            
+            document.getElementById('confirmTitle').innerHTML = direction === 'long' ? '📈 BUY / LONG' : '📉 SELL / SHORT';
+            document.getElementById('confirmAmount').innerHTML = `$${amount}`;
+            document.getElementById('confirmTime').innerHTML = `${time}s`;
+            document.getElementById('confirmPair').innerHTML = `${pair}/USDT`;
+            
+            document.getElementById('confirmModal').classList.add('active');
+        })
+        .catch(error => {
+            console.log('Error checking freeze status:', error);
+            showToast('Error checking account status. Please try again.', 'error');
+        });
+}
+
+// Setup trade buttons
+document.getElementById('buyLongBtn').addEventListener('click', () => {
+    openTradeConfirmation('long');
+});
+
+document.getElementById('sellShortBtn').addEventListener('click', () => {
+    openTradeConfirmation('short');
+});
+
+// Close confirmation modal
+function closeConfirmModal() {
+    const modal = document.getElementById('confirmModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+// Place the trade when Confirm is clicked
+async function confirmTrade() {
+    if (!pendingTrade.amount || !pendingTrade.direction) {
+        showToast('No trade to confirm', 'error');
+        closeConfirmModal();
+        return;
+    }
+    
+    const balanceDisplay = document.getElementById('tradeBalanceDisplay');
+    const balanceText = balanceDisplay ? balanceDisplay.innerText : document.getElementById('tradeBalance').innerText;
+    const currentBalance = parseFloat(balanceText.replace('$', '').replace(',', ''));
+    
+    if (pendingTrade.amount > currentBalance) {
+        showToast('Insufficient balance!', 'error');
+        closeConfirmModal();
+        return;
+    }
+    
+    const newBalance = currentBalance - pendingTrade.amount;
+    
+    try {
+        const meResponse = await fetch('/api/me');
+        const meData = await meResponse.json();
+        
+        if (meData.loggedIn) {
+            const updateResponse = await fetch('/api/admin/update-balance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    email: meData.user.email, 
+                    balance: newBalance 
+                })
+            });
+            
+            const updateData = await updateResponse.json();
+            
+            if (updateData.success) {
+                const balanceDisplayElement = document.getElementById('tradeBalanceDisplay');
+                if (balanceDisplayElement) {
+                    balanceDisplayElement.innerHTML = `$${newBalance.toLocaleString()}`;
+                }
+                const tradeBalanceElement = document.getElementById('tradeBalance');
+                if (tradeBalanceElement) {
+                    tradeBalanceElement.innerHTML = `$${newBalance.toLocaleString()}`;
+                }
+                
+                showToast(`Trade placed! $${pendingTrade.amount} deducted. New balance: $${newBalance}`, 'success');
+                
+                // ========== NEW CODE HERE ==========
+                // Get current price for the selected pair
+const selectedPair = document.getElementById('tradingPair').value;
+let currentPrice = cryptoPrices[selectedPair] || 0;
+console.log(`Using price for ${selectedPair}:`, currentPrice);
+                
+                const trade = {
+                    id: Date.now(),
+                    pair: selectedPair,
+                    direction: pendingTrade.direction,
+                    amount: pendingTrade.amount,
+                    entryPrice: currentPrice,
+                    time: pendingTrade.time,
+                    startTime: Date.now(),
+                    expiryTime: Date.now() + (pendingTrade.time * 1000),
+                    status: 'active'
+                };
+                
+                activeTrades.push(trade);
+                displayActiveTrades();
+                setTimeout(() => settleTrade(trade), trade.time * 1000);
+                // ========== END NEW CODE ==========
+            } else {
+                showToast('Error updating balance', 'error');
+            }
+        }
+    } catch (error) {
+        console.log('Error:', error);
+        showToast('Error processing trade', 'error');
+    }
+    
+    closeConfirmModal();
+    pendingTrade = { direction: null, amount: 0, pair: null, time: 0 };
+    const amountInput = document.getElementById('tradeAmount');
+    if (amountInput) amountInput.value = '';
+}
+// Switch between Active and History tabs
+document.getElementById('activeTabBtn').addEventListener('click', function() {
+    document.getElementById('activePanel').style.display = 'block';
+    document.getElementById('historyPanel').style.display = 'none';
+    this.style.color = 'white';
+    document.getElementById('historyTabBtn').style.color = '#6b7280';
+});
+
+document.getElementById('historyTabBtn').addEventListener('click', function() {
+    document.getElementById('activePanel').style.display = 'none';
+    document.getElementById('historyPanel').style.display = 'block';
+    this.style.color = 'white';
+    document.getElementById('activeTabBtn').style.color = '#6b7280';
+});
+
+// Update all crypto prices from Binance
+async function updateRealPrices() {
+    // List of all trading pairs
+    const pairs = ['BTCUSDT', 'ETHUSDT', 'XRPUSDT', 'BNBUSDT', 'SOLUSDT', 'DOGEUSDT', 'ADAUSDT', 'LINKUSDT', 'LTCUSDT', 'AVAXUSDT'];
+    
+    // Fetch each pair one by one
+    for (const pair of pairs) {
+        try {
+            const response = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${pair}`);
+            const data = await response.json();
+            const symbol = pair.replace('USDT', '');
+            cryptoPrices[symbol] = parseFloat(data.price);
+            console.log(`${symbol} price:`, cryptoPrices[symbol]);
+        } catch (error) {
+            console.log(`Error fetching ${pair}:`, error);
+        }
+    }
+    
+    // Update BTC and ETH displays
+    const btcPriceElement = document.getElementById('btcPrice');
+    const ethPriceElement = document.getElementById('ethPrice');
+    if (btcPriceElement) btcPriceElement.innerText = cryptoPrices.BTC;
+    if (ethPriceElement) ethPriceElement.innerText = cryptoPrices.ETH;
+    
+    // Update the price display in Trade tab
+    updatePriceForPair();
+}
+
+async function settleTrade(trade){
+    console.log('Settling trade:', trade);
+    
+    // Remove from active trades
+    const index = activeTrades.findIndex(t => t.id === trade.id);
+    if (index > -1) {
+        activeTrades.splice(index, 1);
+    }
+    
+    // Check win mode
+    let winModeActive = false;
+    let profitPercent = 2;
+    
+    async function checkWinModeSimple() {
+        try {
+            const response = await fetch('/api/admin/win-mode');
+            const data = await response.json();
+            console.log('Win mode status:', data);
+            winModeActive = data.winMode;
+            profitPercent = data.profitPercent || 2;
+        } catch(e) {
+            console.log('Error:', e);
+        }
+    }
+    
+    await checkWinModeSimple();
+    console.log('Win mode is:', winModeActive ? 'ON' : 'OFF', 'Profit:', profitPercent + '%');
+    
+    // Get current price for the selected pair
+const selectedPair = document.getElementById('tradingPair').value;
+let currentPrice = cryptoPrices[selectedPair] || 0;
+console.log(`Trade price for ${selectedPair}:`, currentPrice);
+    
+    // Determine if trade wins based on win mode
+    let win = true;
+    
+    if (winModeActive) {
+        // Win mode ON - always win with set profit
+        win = true;
+        trade.payout = trade.amount * (1 + profitPercent / 100);
+        trade.exitPrice = currentPrice;  // REAL exit price
+        console.log(`Win Mode ON: WIN with ${profitPercent}% profit, Exit price: $${currentPrice}`);
+    } else {
+        // Win mode OFF - market decides based on price movement
+        const priceUp = currentPrice > trade.entryPrice;
+        
+        if (trade.direction === 'long' && priceUp) {
+            win = true;
+            trade.payout = trade.amount * (currentPrice / trade.entryPrice);
+            trade.exitPrice = currentPrice;
+            console.log(`Market WIN! Price went from $${trade.entryPrice} to $${currentPrice}`);
+        } else if (trade.direction === 'short' && !priceUp) {
+            win = true;
+            trade.payout = trade.amount * (trade.entryPrice / currentPrice);
+            trade.exitPrice = currentPrice;
+            console.log(`Market WIN! Price went from $${trade.entryPrice} to $${currentPrice}`);
+        } else {
+            win = false;
+            trade.payout = 0;
+            trade.exitPrice = currentPrice;
+            console.log(`Market LOSS! You lost $${trade.amount}`);
+        }
+    }
+    
+    // Asset page tabs
+const assetTabBtn2 = document.getElementById('assetTabBtn');
+const historyTabBtn2 = document.getElementById('historyTabBtnAsset');
+const assetPanel2 = document.getElementById('assetPanel');
+const historyPanel2 = document.getElementById('historyPanelAsset');
+
+if (assetTabBtn2 && assetPanel2 && historyPanel2) {
+    assetTabBtn2.addEventListener('click', function() {
+        assetPanel2.style.display = 'block';
+        historyPanel2.style.display = 'none';
+        this.style.color = 'white';
+        this.style.borderBottom = '2px solid #3b82f6';
+        if (historyTabBtn2) {
+            historyTabBtn2.style.color = '#6b7280';
+            historyTabBtn2.style.borderBottom = 'none';
+        }
+    });
+}
+
+if (historyTabBtn2 && assetPanel2 && historyPanel2) {
+    historyTabBtn2.addEventListener('click', function() {
+        assetPanel2.style.display = 'none';
+        historyPanel2.style.display = 'block';
+        this.style.color = 'white';
+        this.style.borderBottom = '2px solid #3b82f6';
+        if (assetTabBtn2) {
+            assetTabBtn2.style.color = '#6b7280';
+            assetTabBtn2.style.borderBottom = 'none';
+        }
+        loadTransactionHistory();  // ← MUST BE INSIDE the function
+    });
+}
+
+    // Update user balance if win
+    if (win && trade.payout > 0) {
+        try {
+            const meResponse = await fetch('/api/me');
+            const meData = await meResponse.json();
+            
+            if (meData.loggedIn) {
+                const balanceResponse = await fetch('/api/user/balance');
+                const balanceData = await balanceResponse.json();
+                
+                if (balanceData.success) {
+                    const newBalance = balanceData.balance + trade.payout;
+                    
+                    await fetch('/api/admin/update-balance', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            email: meData.user.email, 
+                            balance: newBalance 
+                        })
+                    });
+                    
+                    const balanceDisplay = document.getElementById('tradeBalanceDisplay');
+                    if (balanceDisplay) balanceDisplay.innerHTML = `$${newBalance.toLocaleString()}`;
+                    const tradeBalance = document.getElementById('tradeBalance');
+                    if (tradeBalance) tradeBalance.innerHTML = `$${newBalance.toLocaleString()}`;
+                    
+                    console.log(`Added $${trade.payout} to balance. New balance: $${newBalance}`);
+                }
+            }
+        } catch (error) {
+            console.log('Error updating balance:', error);
+        }
+    }
+    
+    trade.result = win ? 'win' : 'loss';
+    
+    // Add to history
+    tradeHistory.unshift(trade);
+    
+    // Update displays
+    displayActiveTrades();
+    displayTradeHistory();
+    
+    saveTradeToDB(trade);
+    
+    // Show result
+    if (win) {
+        showToast(`🎉 WIN! Your ${trade.pair} trade won! +$${trade.payout.toFixed(2)}`, 'success');
+    } else {
+        showToast(`😞 LOSS! Your ${trade.pair} trade lost. -$${trade.amount}`, 'error');
+    }
+}
+
+// Display trade history
+function displayTradeHistory() {
+    const container = document.getElementById('historyPanel');
+    
+    if (!container) {
+        console.log('historyPanel not found');
+        return;
+    }
+    
+    if (tradeHistory.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: #6b7280; padding: 20px;">No trade history</div>';
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    tradeHistory.slice(0, 20).forEach(trade => {
+        const resultColor = trade.result === 'win' ? '#10b981' : '#ef4444';
+        const resultText = trade.result === 'win' ? `WIN +$${trade.payout.toFixed(2)}` : `LOSS -$${trade.amount}`;
+        const directionText = trade.direction === 'long' ? 'BUY' : 'SELL';
+        
+        const div = document.createElement('div');
+        div.style.cssText = 'background: #2c2d33; padding: 12px; border-radius: 8px; margin-bottom: 10px; cursor: pointer;';
+        div.onclick = () => {
+            showTradeDetails(trade);
+        };
+        div.innerHTML = `
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span style="color: white;">${trade.pair}/USDT - ${directionText}</span>
+                <span style="color: ${resultColor};">${resultText}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: #6b7280;">Entry: $${trade.entryPrice.toFixed(2)}</span>
+                <span style="color: #6b7280;">Exit: $${trade.exitPrice.toFixed(2)}</span>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// Load trades from database
+async function loadTradesFromDB() {
+    try {
+        const response = await fetch('/api/get-trades');
+        const data = await response.json();
+        
+        console.log('Raw data from server:', data);
+        
+        if (data.success && data.trades) {
+            console.log('Number of trades from server:', data.trades.length);
+            
+            tradeHistory = data.trades.map(t => ({
+                id: t.id,
+                pair: t.pair,
+                direction: t.direction,
+                amount: parseFloat(t.amount),
+                entryPrice: parseFloat(t.entryPrice),
+                exitPrice: parseFloat(t.exitPrice),
+                payout: parseFloat(t.payout),
+                time: t.time,
+                result: t.result,
+                status: t.status,
+                savedAt: t.savedAt
+            }));
+            
+            console.log(`Loaded ${tradeHistory.length} trades from database`);
+            displayTradeHistory();
+        } else {
+            console.log('No trades found or error:', data.message);
+        }
+    } catch (error) {
+        console.log('Error loading trades:', error);
+    }
+}
+
+// Save trade to database
+async function saveTradeToDB(trade) {
+    try {
+        const response = await fetch('/api/save-trade', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ trade: trade })
+        });
+        const data = await response.json();
+        if (data.success) {
+            console.log('Trade saved to database');
+        }
+    } catch (error) {
+        console.log('Error saving trade:', error);
+    }
+}
+
+function closeTradeDetailModal() {
+    document.getElementById('tradeDetailModal').classList.remove('active');
+}
+
+// Show trade details modal
+function showTradeDetails(trade) {
+    console.log('Trade clicked:', trade);
+    
+    const directionColor = trade.direction === 'long' ? '#10b981' : '#ef4444';
+    const directionText = trade.direction === 'long' ? 'BUY / LONG' : 'SELL / SHORT';
+    const resultColor = trade.result === 'win' ? '#10b981' : '#ef4444';
+    const resultText = trade.result === 'win' ? `+${trade.payout.toFixed(2)} USDT` : `-${trade.amount.toFixed(2)} USDT`;
+    
+    // Format date
+    const tradeDate = new Date(trade.savedAt || trade.startTime || Date.now());
+    const formattedDate = tradeDate.toLocaleString();
+    
+    // Calculate profit rate
+    let profitRate = 0;
+    if (trade.result === 'win') {
+        profitRate = ((trade.payout - trade.amount) / trade.amount * 100).toFixed(2);
+    } else {
+        profitRate = -100;
+    }
+    
+    document.getElementById('tradeDetailContent').innerHTML = `
+    <div style="position: relative;">
+        <div style="position: absolute; top: -5px; right: -5px;">
+            <button onclick="closeTradeDetailModal()" style="background: #2c2d33; border: 1px solid #3a3b42; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #9ca3af; font-size: 16px; transition: all 0.2s;" onmouseover="this.style.background='#ef4444'; this.style.color='white'" onmouseout="this.style.background='#2c2d33'; this.style.color='#9ca3af';">×</button>
+        </div>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 5px;">${trade.pair}/USDT</div>
+            <div style="font-size: 28px; font-weight: 700; color: ${resultColor}; margin-bottom: 5px;">
+                ${resultText}
+            </div>
+            <div style="font-size: 12px; color: ${resultColor}; opacity: 0.8;">
+                ${trade.result === 'win' ? 'Profit' : 'Loss'}
+            </div>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, #1f1f2a, #1a1b1f); border-radius: 16px; padding: 20px; border: 1px solid #2c2d33;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #2c2d33;">
+                <span style="color: #6b7280; font-size: 13px; font-weight: 500;">POSITION</span>
+                <span style="color: ${directionColor}; font-weight: 600; font-size: 14px; background: ${directionColor}10; padding: 4px 12px; border-radius: 20px;">${directionText}</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 14px;">
+                <span style="color: #6b7280; font-size: 13px;">Order Amount</span>
+                <span style="color: #fff; font-weight: 500;">${trade.amount.toFixed(2)} USDT</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 14px;">
+                <span style="color: #6b7280; font-size: 13px;">Entry Price</span>
+                <span style="color: #fff; font-weight: 500;">$${trade.entryPrice.toFixed(2)}</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 14px;">
+                <span style="color: #6b7280; font-size: 13px;">Exit Price</span>
+                <span style="color: #fff; font-weight: 500;">$${trade.exitPrice.toFixed(2)}</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 14px;">
+                <span style="color: #6b7280; font-size: 13px;">Expiry Time (12X)</span>
+                <span style="color: #fff; font-weight: 500;">${trade.time}s</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 14px; padding: 8px 0; background: #0a0b0e; border-radius: 8px; margin: 10px 0;">
+                <span style="color: #6b7280; font-size: 13px; padding-left: 8px;">Profit Rate</span>
+                <span style="color: ${resultColor}; font-weight: 700; font-size: 16px; padding-right: 8px;">${profitRate}%</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-top: 8px; padding-top: 12px; border-top: 1px solid #2c2d33;">
+                <span style="color: #6b7280; font-size: 11px;">Date & Time</span>
+                <span style="color: #6b7280; font-size: 11px;">${formattedDate}</span>
+            </div>
+        </div>
+    </div>
+`;
+    
+    document.getElementById('tradeDetailModal').classList.add('active');
+}
+
+// Asset page tabs
+const assetBtn = document.getElementById('assetTabBtn');
+const historyBtn = document.getElementById('historyTabBtnAsset');
+const assetPanelDiv = document.getElementById('assetPanel');
+const historyPanelDiv = document.getElementById('historyPanelAsset');
+
+if (assetBtn) {
+    assetBtn.onclick = function() {
+        assetPanelDiv.style.display = 'block';
+        historyPanelDiv.style.display = 'none';
+        this.style.borderBottom = '2px solid #3b82f6';
+        this.style.color = 'white';
+        historyBtn.style.borderBottom = 'none';
+        historyBtn.style.color = '#6b7280';
+    };
+}
+
+if (historyBtn) {
+    historyBtn.onclick = function() {
+        assetPanelDiv.style.display = 'none';
+        historyPanelDiv.style.display = 'block';
+        this.style.borderBottom = '2px solid #3b82f6';
+        this.style.color = 'white';
+        assetBtn.style.borderBottom = 'none';
+        assetBtn.style.color = '#6b7280';
+        loadTransactionHistory();
+    };
+}
+
+</script>
+
+<!-- Trade Details Modal -->
+    <div id="tradeDetailModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div id="tradeDetailContent" style="text-align: center;">
+                Test Content
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
