@@ -1888,12 +1888,15 @@ async function settleTrade(trade) {
     
     // Determine if trade wins based on win mode
     let win = true;
+    let lossPercent = 0;
+    let profitPercentLeverage = 0;
     
     if (winModeActive) {
         // Win mode ON - always win with set profit
         win = true;
         trade.payout = trade.amount * (1 + profitPercent / 100);
         trade.exitPrice = currentPrice;
+        profitPercentLeverage = profitPercent;
         console.log(`Win Mode ON: WIN with ${profitPercent}% profit`);
         console.log(`Payout calculation: ${trade.amount} * (1 + ${profitPercent}/100) = ${trade.payout}`);
     } else {
@@ -1907,12 +1910,15 @@ async function settleTrade(trade) {
             const lossResult = priceChangePercent * lossLeverage;
             if (priceChangePercent > 0) {
                 win = true;
+                profitPercentLeverage = winResult;
                 trade.payout = trade.amount * (1 + winResult / 100);
                 trade.exitPrice = currentPrice;
                 console.log(`Market WIN! Price moved +${priceChangePercent.toFixed(4)}% → +${winResult.toFixed(2)}% profit`);
             } else {
                 win = false;
-                const lossAmount = trade.amount * (Math.abs(lossResult) / 100);
+                profitPercentLeverage = lossResult;
+                lossPercent = Math.abs(lossResult);
+                const lossAmount = trade.amount * (lossPercent / 100);
                 trade.payout = 0;
                 trade.exitPrice = currentPrice;
                 console.log(`Market LOSS! Price moved ${priceChangePercent.toFixed(4)}% → ${lossResult.toFixed(2)}% loss ($${lossAmount.toFixed(2)})`);
@@ -1922,12 +1928,15 @@ async function settleTrade(trade) {
             const lossResult = -priceChangePercent * lossLeverage;
             if (priceChangePercent < 0) {
                 win = true;
+                profitPercentLeverage = winResult;
                 trade.payout = trade.amount * (1 + winResult / 100);
                 trade.exitPrice = currentPrice;
                 console.log(`Market WIN! Price moved ${priceChangePercent.toFixed(4)}% → +${winResult.toFixed(2)}% profit`);
             } else {
                 win = false;
-                const lossAmount = trade.amount * (Math.abs(lossResult) / 100);
+                profitPercentLeverage = lossResult;
+                lossPercent = Math.abs(lossResult);
+                const lossAmount = trade.amount * (lossPercent / 100);
                 trade.payout = 0;
                 trade.exitPrice = currentPrice;
                 console.log(`Market LOSS! Price moved +${priceChangePercent.toFixed(4)}% → ${lossResult.toFixed(2)}% loss ($${lossAmount.toFixed(2)})`);
@@ -1973,6 +1982,7 @@ async function settleTrade(trade) {
     }
     
     trade.result = win ? 'win' : 'loss';
+    trade.profitPercent = win ? profitPercentLeverage : -lossPercent;
     
     // Add to history
     tradeHistory.unshift(trade);
@@ -1983,11 +1993,12 @@ async function settleTrade(trade) {
     
     saveTradeToDB(trade);
     
-    // Show result
+    // Show result with correct percentages
     if (win) {
-        showToast(`🎉 WIN! Your ${trade.pair} trade won! +$${trade.payout.toFixed(2)}`, 'success');
+        showToast(`🎉 WIN! Your ${trade.pair} trade won! +$${trade.payout.toFixed(2)} (${profitPercentLeverage.toFixed(2)}%)`, 'success');
     } else {
-        showToast(`😞 LOSS! Your ${trade.pair} trade lost. -$${trade.amount}`, 'error');
+        const lossAmount = trade.amount * (lossPercent / 100);
+        showToast(`😞 LOSS! Your ${trade.pair} trade lost. -$${lossAmount.toFixed(2)} (${lossPercent.toFixed(2)}%)`, 'error');
     }
 }
 
