@@ -1749,7 +1749,7 @@ async function confirmTrade() {
         const meData = await meResponse.json();
         
         if (meData.loggedIn) {
-            const updateResponse = await fetch('/api/admin/update-balance', {
+            const updateResponse = await fetch('/api/user/update-balance', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
