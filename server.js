@@ -17,7 +17,7 @@ app.use(express.json());
 // Configure multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '../uploads/'));
+        cb(null, '/tmp/');
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -160,12 +160,12 @@ app.post('/api/signup-with-kyc', upload.single('kycFile'), async (req, res) => {
             });
         }
         
-        if (!kycFile) {
-            return res.json({ 
-                success: false, 
-                message: 'Please upload KYC document' 
-            });
-        }
+     //   if (!kycFile) {
+     //       return res.json({ 
+     //           success: false, 
+     //           message: 'Please upload KYC document' 
+     //       });
+     //   }
         
         const db = client.db(dbName);
         const users = db.collection('users');
