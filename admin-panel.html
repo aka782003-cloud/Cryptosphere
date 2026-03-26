@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptosphere Admin</title>
+    <style>
+        /* Admin table styling */
+.user-row {
+    transition: background 0.2s ease;
+}
+
+.user-row:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Alternating row colors */
+.user-row:nth-child(even) {
+    background: #0f1015;
+}
+
+.user-row:nth-child(odd) {
+    background: #1a1b1f;
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-badge.pending {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+}
+
+.status-badge.approved {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.status-badge.rejected {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.status-badge.admin {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+}
+
+.status-badge.frozen {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+        /* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #2c2d33;
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Range slider styling */
+input[type="range"] {
+    -webkit-appearance: none;
+    background: #2c2d33;
+    border-radius: 5px;
+    height: 4px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #10b981;
+    cursor: pointer;
+}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0a0b0e;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 16px;
+        }
+
+        .header h1 {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-link {
+            color: #3b82f6;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .users-table {
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 16px;
+            overflow-x: auto;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1.5fr 2fr 0.8fr 0.8fr 1fr 0.8fr 1fr 0.8fr 1.2fr;
+            padding: 15px 20px;
+            background: #0a0b0e;
+            color: #6b7280;
+            font-weight: 600;
+            border-bottom: 1px solid #2c2d33;
+            font-size: 12px;
+        }
+
+        .user-row {
+            display: grid;
+            grid-template-columns: 1.5fr 2fr 0.8fr 0.8fr 1fr 0.8fr 1fr 0.8fr 1.2fr;
+            padding: 15px 20px;
+            border-bottom: 1px solid #2c2d33;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .user-row:last-child {
+            border-bottom: none;
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .balance-input {
+            background: #2c2d33;
+            border: 1px solid #3a3b42;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 6px;
+            width: 100px;
+        }
+
+        .update-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .update-btn:hover {
+            background: #2563eb;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 1000px) {
+            .table-header, .user-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cryptosphere Admin Panel</h1>
+            <div>
+                <a href="http://localhost:3000" class="back-link">← Back to Site</a>
+                <button class="logout-btn" onclick="logout()" style="margin-left: 10px;">Logout</button>
+            </div>
+        </div>
+
+        <div class="stats">
+    <div class="stat-card">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <span style="font-size: 24px;">👥</span>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-value" id="totalUsers">0</div>
+    </div>
+    <div class="stat-card">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <span style="font-size: 24px;">💰</span>
+            <div class="stat-label">Total Balance</div>
+        </div>
+        <div class="stat-value" id="totalBalance">$0</div>
+    </div>
+    <div class="stat-card">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <span style="font-size: 24px;">👑</span>
+            <div class="stat-label">Admins</div>
+        </div>
+        <div class="stat-value" id="totalAdmins">0</div>
+    </div>
+</div>
+
+<!-- ADD WIN MODE CARD HERE -->
+<div class="stat-card" style="background: #1a1b1f; border: 1px solid #2c2d33; border-radius: 16px; padding: 15px; margin-bottom: 20px;">
+    <div class="stat-label">Win Mode</div>
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+        <span style="color: #6b7280;">OFF</span>
+        <label class="switch">
+            <input type="checkbox" id="winModeToggle">
+            <span class="slider round"></span>
+        </label>
+        <span style="color: #6b7280;">ON</span>
+    </div>
+    
+    <div id="profitControl" style="display: none; margin-top: 15px;">
+        <div style="color: #6b7280; font-size: 12px; margin-bottom: 5px;">Profit Percentage</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <input type="range" id="profitPercent" min="1" max="100" step="1" value="2" style="flex: 1;">
+            <span id="profitValue" style="color: #10b981; font-weight: bold;">2%</span>
+        </div>
+    </div>
+    
+    <div id="winModeStatus" style="font-size: 12px; margin-top: 8px; color: #ef4444;">📊 Market decides</div>
+</div>
+
+<!-- Search Bar -->
+<div style="margin-bottom: 20px; display: flex; gap: 10px;">
+    <input type="text" id="searchInput" placeholder="🔍 Search by name or email..." 
+           style="flex: 1; padding: 10px 15px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 8px; color: white; font-size: 14px;">
+    <button onclick="clearSearch()" style="padding: 10px 20px; background: #2c2d33; border: 1px solid #3a3b42; border-radius: 8px; color: #6b7280; cursor: pointer;">Clear</button>
+</div>
+
+        <div class="users-table">
+            <div class="table-header">
+                <div>Name</div>
+                <div>Email</div>
+                <div>Balance</div>
+                <div>KYC Type</div>
+                <div>KYC Number</div>
+                <div>KYC Status</div>
+                <div>Account Status</div>
+                <div>Role</div>
+                <div>Actions</div>
+            </div>
+            <div id="usersList">
+                <!-- Users will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store all users for search
+        let allUsers = [];
+        
+        // Check if admin is logged in
+        async function checkAdminSession() {
+            try {
+                const response = await fetch('/api/admin/check');
+                const data = await response.json();
+                
+                if (!data.loggedIn) {
+                    window.location.href = '/admin-login';
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                window.location.href = '/admin-login';
+                return false;
+            }
+        }
+        
+        // Display users with search
+        function displayUsers(usersToShow) {
+            const usersList = document.getElementById('usersList');
+            usersList.innerHTML = '';
+
+            usersToShow.forEach(user => {
+                const row = document.createElement('div');
+                row.className = 'user-row';
+                
+                // Show different buttons based on status
+                let actionButtons = '';
+                
+                if (user.status === 'pending') {
+                    actionButtons = `
+                        <button onclick="approveUser('${user.email}')" 
+                            style="background: #10b981; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-right: 5px; cursor: pointer;">
+                            Approve
+                        </button>
+                        <button onclick="rejectUser('${user.email}')" 
+                            style="background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                            Reject
+                        </button>
+                    `;
+                } else {
+                    actionButtons = `
+                        <input type="number" id="balance-${user.email}" value="${user.balance.toFixed(2)}" step="100" style="width:100px;background:#2c2d33;border:1px solid #3a3b42;color:white;padding:5px;border-radius:5px;margin-right:5px;">
+                        <button onclick="updateBalance('${user.email}')" style="background:#3b82f6;color:white;border:none;padding:5px 10px;border-radius:5px;margin-right:5px;cursor:pointer;">Update</button>
+                        <button onclick="deleteUser('${user.email}')" style="background:#ef4444;color:white;border:none;padding:5px 10px;border-radius:5px;margin-right:5px;cursor:pointer;">Delete</button>
+                        <button onclick="toggleFreeze('${user.email}', ${user.frozen || false})" style="background:${user.frozen ? '#10b981' : '#f59e0b'}; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
+                            ${user.frozen ? 'Unfreeze' : 'Freeze'}
+                        </button>
+                    `;
+                }
+                
+                // KYC Status display
+                let kycStatusDisplay = '';
+                if (user.kyc?.status === 'pending') {
+                    kycStatusDisplay = '<span class="status-badge pending">⏳ Pending</span>';
+                } else if (user.kyc?.status === 'approved') {
+                    kycStatusDisplay = '<span class="status-badge approved">✅ Approved</span>';
+                } else if (user.kyc?.status === 'rejected') {
+                    kycStatusDisplay = '<span class="status-badge rejected">❌ Rejected</span>';
+                } else {
+                    kycStatusDisplay = '<span style="color: #6b7280;">-</span>';
+                }
+                
+                //Account Status display
+                let accountStatusDisplay = '';
+                if (user.status == 'pending') {
+                    accountStatusDisplay = '<span class="status-badge pending">⏳ Pending</span>';
+                } else if (user.status == 'rejected') {
+                    accountStatusDisplay = '<span class="status-badge rejected">❌ Rejected</span>';
+                } else {
+                    accountStatusDisplay = '<span class="status-badge approved">✅ Approved</span>';
+                }
+                
+                // KYC Document link
+                let kycDocDisplay = user.kyc?.documentPath ? 
+                    `<a href="${user.kyc.documentPath}" target="_blank" style="color: #3b82f6;">View</a>` : 
+                    '<span style="color: #6b7280;">-</span>';
+                
+                row.innerHTML = `
+                    <div style="word-break: break-word;">${user.name}</div>
+                    <div style="word-break: break-word;">${user.email}</div>
+                    <div>$${user.balance.toFixed(2)}</div>
+                    <div>${user.kyc?.type || '-'}</div>
+                    <div>${user.kyc?.number || '-'}</div>
+                    <div>${kycDocDisplay}</div>
+                    <div>${kycStatusDisplay}</div>
+                    <div>${accountStatusDisplay}</div>
+                    <div>${user.isAdmin ? '<span class="status-badge admin">ADMIN</span>' : '<span class="status-badge approved">User</span>'}</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 5px;">${actionButtons}</div>
+                `;
+                usersList.appendChild(row);
+            });
+        }
+        
+        // Search function
+        function filterUsers() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allUsers.filter(user => 
+                user.name.toLowerCase().includes(searchTerm) || 
+                user.email.toLowerCase().includes(searchTerm)
+            );
+            displayUsers(filtered);
+        }
+        
+        // Clear search
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            displayUsers(allUsers);
+        }
+        
+        // Load users (updated with search)
+        async function loadUsers() {
+            const isAdmin = await checkAdminSession();
+            if (!isAdmin) return;
+            
+            try {
+                const response = await fetch('/api/admin/users');
+                const data = await response.json();
+                
+                if (data.success) {
+                    allUsers = data.users;
+                    displayUsers(allUsers);
+                    updateStats(allUsers);
+                } else {
+                    alert('❌ ' + data.message);
+                    window.location.href = '/admin-login';
+                }
+            } catch (error) {
+                console.log('Error:', error);
+                alert('Error loading users');
+            }
+        }
+        
+        // Add event listener for search
+        document.getElementById('searchInput').addEventListener('input', filterUsers);
+        
+        // Rest of your functions (updateStats, updateBalance, deleteUser, approveUser, etc.) remain the same
+        function updateStats(users) {
+            document.getElementById('totalUsers').textContent = users.length;
+            const totalBalance = users.reduce((sum, user) => sum + (user.balance || 0), 0);
+            document.getElementById('totalBalance').textContent = `$${totalBalance.toFixed(2)}`;
+            const totalAdmins = users.filter(user => user.isAdmin).length;
+            document.getElementById('totalAdmins').textContent = totalAdmins;
+        }
+
+        async function updateBalance(email) {
+            const input = document.getElementById(`balance-${email}`);
+            const newBalance = parseFloat(input.value);
+
+            if (isNaN(newBalance)) {
+                alert('Please enter a valid number');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/update-balance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, balance: newBalance })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(`✅ Balance updated for ${email}`);
+                    loadUsers();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Error updating balance');
+                console.log('Error:', error);
+            }
+        }
+
+        async function deleteUser(email) {
+            if (!confirm(`⚠️ Are you sure you want to delete user ${email}? This action cannot be undone.`)) return;
+            try {
+                const response = await fetch('/api/admin/delete-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(`✅ User ${email} deleted!`);
+                    loadUsers();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Error deleting user');
+                console.log('Error:', error);
+            }
+        }
+
+        async function approveUser(email) {
+            if (!confirm(`Approve user ${email}? This will approve both account and KYC.`)) return;
+            try {
+                const response = await fetch('/api/admin/approve-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, status: 'approved' })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(`✅ User ${email} approved! (Account + KYC)`);
+                    loadUsers();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Error approving user');
+                console.log('Error:', error);
+            }
+        }
+
+        async function rejectUser(email) {
+            if (!confirm(`Reject user ${email}?`)) return;
+            try {
+                const response = await fetch('/api/admin/approve-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, status: 'rejected' })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(`❌ User ${email} rejected!`);
+                    loadUsers();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Error rejecting user');
+                console.log('Error:', error);
+            }
+        }
+
+        async function toggleFreeze(email, currentStatus) {
+            const action = currentStatus ? 'unfreeze' : 'freeze';
+            if (!confirm(`Are you sure you want to ${action} user ${email}?`)) return;
+            try {
+                const response = await fetch('/api/admin/toggle-freeze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, frozen: !currentStatus })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(`✅ User ${action}d successfully`);
+                    loadUsers();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Error updating freeze status');
+                console.log('Error:', error);
+            }
+        }
+
+        async function logout() {
+            try {
+                const response = await fetch('/api/admin/logout', { method: 'POST' });
+                const data = await response.json();
+                if (data.success) {
+                    window.location.href = '/admin-login';
+                }
+            } catch (error) {
+                console.log('Error:', error);
+            }
+        }
+
+        // Win Mode functionality
+        const winModeToggle = document.getElementById('winModeToggle');
+        const profitControl = document.getElementById('profitControl');
+        const profitPercent = document.getElementById('profitPercent');
+        const profitValue = document.getElementById('profitValue');
+        const winModeStatus = document.getElementById('winModeStatus');
+
+        async function loadWinMode() {
+            try {
+                const response = await fetch('/api/admin/win-mode');
+                const data = await response.json();
+                if (data.success) {
+                    winModeToggle.checked = data.winMode;
+                    profitPercent.value = data.profitPercent;
+                    profitValue.innerHTML = data.profitPercent + '%';
+                    if (data.winMode) {
+                        profitControl.style.display = 'block';
+                        winModeStatus.innerHTML = `✅ WIN MODE ON - All trades win with +${data.profitPercent}% profit`;
+                        winModeStatus.style.color = '#10b981';
+                    } else {
+                        profitControl.style.display = 'none';
+                        winModeStatus.innerHTML = '📊 Market decides outcome';
+                        winModeStatus.style.color = '#ef4444';
+                    }
+                }
+            } catch (error) {
+                console.log('Error loading win mode:', error);
+            }
+        }
+
+        async function saveWinMode(winMode, profitPercentVal) {
+            try {
+                const response = await fetch('/api/admin/win-mode', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ winMode, profitPercent: profitPercentVal })
+                });
+                return await response.json();
+            } catch (error) {
+                console.log('Error saving win mode:', error);
+                return { success: false };
+            }
+        }
+
+        profitPercent.addEventListener('input', function() {
+            const value = this.value;
+            profitValue.innerHTML = value + '%';
+            if (winModeToggle.checked) {
+                saveWinMode(true, parseInt(value));
+                winModeStatus.innerHTML = `✅ WIN MODE ON - All trades win with +${value}% profit`;
+            }
+        });
+
+        winModeToggle.addEventListener('change', async function() {
+            const isOn = this.checked;
+            const profit = parseInt(profitPercent.value);
+            const result = await saveWinMode(isOn, profit);
+            if (result.success) {
+                if (isOn) {
+                    profitControl.style.display = 'block';
+                    winModeStatus.innerHTML = `✅ WIN MODE ON - All trades win with +${profit}% profit`;
+                    winModeStatus.style.color = '#10b981';
+                } else {
+                    profitControl.style.display = 'none';
+                    winModeStatus.innerHTML = '📊 Market decides outcome';
+                    winModeStatus.style.color = '#ef4444';
+                }
+            } else {
+                this.checked = !isOn;
+                alert('Failed to save win mode setting');
+            }
+        });
+
+        // Load everything when page opens
+        loadWinMode();
+        loadUsers();
+    </script>
+</body>
+</html>
