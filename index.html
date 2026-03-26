@@ -1851,7 +1851,7 @@ async function updateRealPrices() {
     updatePriceForPair();
 }
 
-async function settleTrade(trade){
+async function settleTrade(trade) {
     console.log('Settling trade:', trade);
     
     // Remove from active trades
@@ -1897,62 +1897,43 @@ async function settleTrade(trade){
         console.log(`Win Mode ON: WIN with ${profitPercent}% profit`);
         console.log(`Payout calculation: ${trade.amount} * (1 + ${profitPercent}/100) = ${trade.payout}`);
     } else {
-        // Win mode OFF - market decides based on price movement
-        const priceUp = currentPrice > trade.entryPrice;
-        
-        if (trade.direction === 'long' && priceUp) {
-            win = true;
-            trade.payout = trade.amount * (currentPrice / trade.entryPrice);
-            trade.exitPrice = currentPrice;
-            console.log(`Market WIN! Price went from $${trade.entryPrice} to $${currentPrice}`);
-        } else if (trade.direction === 'short' && !priceUp) {
-            win = true;
-            trade.payout = trade.amount * (trade.entryPrice / currentPrice);
-            trade.exitPrice = currentPrice;
-            console.log(`Market WIN! Price went from $${trade.entryPrice} to $${currentPrice}`);
-        } else {
-            win = false;
-            trade.payout = 0;
-            trade.exitPrice = currentPrice;
-            console.log(`Market LOSS! You lost $${trade.amount}`);
+        // Win mode OFF - market decides based on price movement with 12X leverage
+        const priceChangePercent = ((currentPrice - trade.entryPrice) / trade.entryPrice) * 100;
+        const leverage = 12; // 12X leverage
+
+        if (trade.direction === 'long') {
+            // For LONG: profit when price goes UP
+            const profitPercentLeverage = priceChangePercent * leverage;
+            if (profitPercentLeverage > 0) {
+                win = true;
+                trade.payout = trade.amount * (1 + profitPercentLeverage / 100);
+                trade.exitPrice = currentPrice;
+                console.log(`Market WIN! Price moved ${priceChangePercent.toFixed(4)}% → ${profitPercentLeverage.toFixed(2)}% profit`);
+            } else {
+                win = false;
+                trade.payout = 0;
+                trade.exitPrice = currentPrice;
+                console.log(`Market LOSS! Price moved ${priceChangePercent.toFixed(4)}% → ${profitPercentLeverage.toFixed(2)}% loss`);
+            }
+        } else if (trade.direction === 'short') {
+            // For SHORT: profit when price goes DOWN
+            const profitPercentLeverage = -priceChangePercent * leverage;
+            if (profitPercentLeverage > 0) {
+                win = true;
+                trade.payout = trade.amount * (1 + profitPercentLeverage / 100);
+                trade.exitPrice = currentPrice;
+                console.log(`Market WIN! Price moved ${(-priceChangePercent).toFixed(4)}% → ${profitPercentLeverage.toFixed(2)}% profit`);
+            } else {
+                win = false;
+                trade.payout = 0;
+                trade.exitPrice = currentPrice;
+                console.log(`Market LOSS! Price moved ${(-priceChangePercent).toFixed(4)}% → ${profitPercentLeverage.toFixed(2)}% loss`);
+            }
         }
     }
     
     console.log(`Final result - Win: ${win}, Payout: ${trade.payout}`);
     
-    // Asset page tabs
-const assetTabBtn2 = document.getElementById('assetTabBtn');
-const historyTabBtn2 = document.getElementById('historyTabBtnAsset');
-const assetPanel2 = document.getElementById('assetPanel');
-const historyPanel2 = document.getElementById('historyPanelAsset');
-
-if (assetTabBtn2 && assetPanel2 && historyPanel2) {
-    assetTabBtn2.addEventListener('click', function() {
-        assetPanel2.style.display = 'block';
-        historyPanel2.style.display = 'none';
-        this.style.color = 'white';
-        this.style.borderBottom = '2px solid #3b82f6';
-        if (historyTabBtn2) {
-            historyTabBtn2.style.color = '#6b7280';
-            historyTabBtn2.style.borderBottom = 'none';
-        }
-    });
-}
-
-if (historyTabBtn2 && assetPanel2 && historyPanel2) {
-    historyTabBtn2.addEventListener('click', function() {
-        assetPanel2.style.display = 'none';
-        historyPanel2.style.display = 'block';
-        this.style.color = 'white';
-        this.style.borderBottom = '2px solid #3b82f6';
-        if (assetTabBtn2) {
-            assetTabBtn2.style.color = '#6b7280';
-            assetTabBtn2.style.borderBottom = 'none';
-        }
-        loadTransactionHistory();  // ← MUST BE INSIDE the function
-    });
-}
-
     // Update user balance if win
     if (win && trade.payout > 0) {
         try {
