@@ -1874,7 +1874,7 @@ async function settleTrade(trade) {
         try {
             const response = await fetch('/api/admin/win-mode');
             const data = await response.json();
-            console.log('Win mode status:', data);
+            console.log('Win mode data from server:', data);
             winModeActive = data.winMode;
             profitPercent = data.profitPercent || 12;
             lossPercent = data.lossPercent || 5;
@@ -1885,6 +1885,8 @@ async function settleTrade(trade) {
     
     await checkWinModeSimple();
     console.log('Win mode is:', winModeActive ? 'ON' : 'OFF', 'Win Profit:', profitPercent + '%', 'Loss:', lossPercent + '%');
+    console.log(`🔍 DEBUG - winModeActive: ${winModeActive}, profitPercent: ${profitPercent}, lossPercent: ${lossPercent}`);
+    console.log(`🔍 DEBUG - trade amount: ${trade.amount}, calculated lossAmount: ${trade.amount * (lossPercent / 100)}`);
     
     // Determine win/loss based on win mode
     let win = false;
@@ -1900,6 +1902,7 @@ async function settleTrade(trade) {
         // Win mode OFF - user loses with loss percentage
         win = false;
         lossAmount = trade.amount * (lossPercent / 100);
+        console.log(`🔍 DEBUG LOSS - lossPercent: ${lossPercent}, lossAmount: ${lossAmount}`);
         console.log(`Win Mode OFF: LOSS - ${lossPercent}% = $${lossAmount}`);
     }
     
