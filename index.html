@@ -1867,7 +1867,8 @@ async function settleTrade(trade) {
     
     // Check win mode
     let winModeActive = false;
-    let profitPercent = 2;
+    let profitPercent = 12;
+    let lossPercent = 5;
     
     async function checkWinModeSimple() {
         try {
@@ -1875,47 +1876,31 @@ async function settleTrade(trade) {
             const data = await response.json();
             console.log('Win mode status:', data);
             winModeActive = data.winMode;
-            profitPercent = data.profitPercent || 2;
+            profitPercent = data.profitPercent || 12;
+            lossPercent = data.lossPercent || 5;
         } catch(e) {
             console.log('Error:', e);
         }
     }
     
     await checkWinModeSimple();
-    console.log('Win mode is:', winModeActive ? 'ON' : 'OFF', 'Profit:', profitPercent + '%');
+    console.log('Win mode is:', winModeActive ? 'ON' : 'OFF', 'Win Profit:', profitPercent + '%', 'Loss:', lossPercent + '%');
     
-    // Get current price
-    const selectedPair = trade.pair;
-    let currentPrice = cryptoPrices[selectedPair] || 0;
-    console.log(`Exit price for ${selectedPair}:`, currentPrice);
-    console.log('Entry price:', trade.entryPrice);
-    
-    // Determine win/loss
+    // Determine win/loss based on win mode
     let win = false;
     let payout = 0;
+    let lossAmount = 0;
     
     if (winModeActive) {
-        // Win mode ON - always win with set profit
+        // Win mode ON - user wins with profit percentage
         win = true;
         payout = trade.amount * (1 + profitPercent / 100);
         console.log(`Win Mode ON: WIN with ${profitPercent}% profit`);
     } else {
-        // Win mode OFF - market decides
-        const priceUp = currentPrice > trade.entryPrice;
-        
-        if (trade.direction === 'long' && priceUp) {
-            win = true;
-            payout = trade.amount * 2;  // 2x payout for market win
-            console.log(`Market WIN! Price went from $${trade.entryPrice} to $${currentPrice}`);
-        } else if (trade.direction === 'short' && !priceUp) {
-            win = true;
-            payout = trade.amount * 2;  // 2x payout for market win
-            console.log(`Market WIN! Price went from $${trade.entryPrice} to $${currentPrice}`);
-        } else {
-            win = false;
-            payout = 0;
-            console.log(`Market LOSS! You lost $${trade.amount}`);
-        }
+        // Win mode OFF - user loses with loss percentage
+        win = false;
+        lossAmount = trade.amount * (lossPercent / 100);
+        console.log(`Win Mode OFF: LOSS - ${lossPercent}% = $${lossAmount}`);
     }
     
     // Update user balance
@@ -1933,7 +1918,7 @@ async function settleTrade(trade) {
                 if (win) {
                     newBalance += payout;
                 } else {
-                    newBalance -= trade.amount;
+                    newBalance -= lossAmount;
                 }
                 
                 await fetch('/api/user/update-balance', {
@@ -1960,12 +1945,14 @@ async function settleTrade(trade) {
     
     // Update trade object for history
     trade.result = win ? 'win' : 'loss';
+    trade.exitPrice = trade.entryPrice;
     if (win) {
         trade.payout = payout;
+        trade.profitPercent = profitPercent;
     } else {
         trade.payout = 0;
+        trade.profitPercent = -lossPercent;
     }
-    trade.exitPrice = currentPrice;
     
     // Add to history
     tradeHistory.unshift(trade);
@@ -1978,9 +1965,9 @@ async function settleTrade(trade) {
     
     // Show result
     if (win) {
-        showToast(`🎉 WIN! Your ${trade.pair} trade won! +$${payout.toFixed(2)}`, 'success');
+        showToast(`🎉 WIN! Your ${trade.pair} trade won! +$${payout.toFixed(2)} (${profitPercent}%)`, 'success');
     } else {
-        showToast(`😞 LOSS! Your ${trade.pair} trade lost. -$${trade.amount}`, 'error');
+        showToast(`😞 LOSS! Your ${trade.pair} trade lost. -$${lossAmount.toFixed(2)} (${lossPercent}%)`, 'error');
     }
 }
 
