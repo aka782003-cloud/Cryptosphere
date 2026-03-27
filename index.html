@@ -1874,37 +1874,37 @@ async function settleTrade(trade) {
         payout = trade.amount * (profitPercentLeverage / 100);
         console.log(`Win Mode ON: WIN with ${profitPercentLeverage}% profit (+$${payout})`);
     } else {
-        // Win mode OFF - market decides with different leverage
-        const priceChangePercent = ((currentPrice - trade.entryPrice) / trade.entryPrice) * 100;
-        const winLeverage = 12;   // 12X for wins
-        const lossLeverage = 20;  // 20X for losses
+    // Win mode OFF - market decides with different leverage
+    const priceChangePercent = ((currentPrice - trade.entryPrice) / trade.entryPrice) * 100;
+    const winLeverage = 12;   // 12X for wins
+    const lossLeverage = 20;  // 20X for losses
 
-        if (trade.direction === 'long') {
-            if (priceChangePercent > 0) {
-                win = true;
-                profitPercentLeverage = priceChangePercent * winLeverage;
-                payout = trade.amount * (profitPercentLeverage / 100);
-                console.log(`Market WIN! Price moved +${priceChangePercent.toFixed(4)}% → +${profitPercentLeverage.toFixed(2)}% profit (+$${payout})`);
-            } else {
-                win = false;
-                const lossPercent = Math.abs(priceChangePercent * lossLeverage);
-                lossAmount = trade.amount * (lossPercent / 100);
-                console.log(`Market LOSS! Price moved ${priceChangePercent.toFixed(4)}% → ${lossPercent.toFixed(2)}% loss (-$${lossAmount})`);
-            }
-        } else if (trade.direction === 'short') {
-            if (priceChangePercent < 0) {
-                win = true;
-                profitPercentLeverage = Math.abs(priceChangePercent) * winLeverage;
-                payout = trade.amount * (profitPercentLeverage / 100);
-                console.log(`Market WIN! Price moved ${priceChangePercent.toFixed(4)}% → +${profitPercentLeverage.toFixed(2)}% profit (+$${payout})`);
-            } else {
-                win = false;
-                const lossPercent = priceChangePercent * lossLeverage;
-                lossAmount = trade.amount * (lossPercent / 100);
-                console.log(`Market LOSS! Price moved +${priceChangePercent.toFixed(4)}% → ${lossPercent.toFixed(2)}% loss (-$${lossAmount})`);
-            }
+    if (trade.direction === 'long') {
+        if (priceChangePercent > 0) {
+            win = true;
+            profitPercentLeverage = priceChangePercent * winLeverage;
+            payout = trade.amount * (profitPercentLeverage / 100);
+            console.log(`Market WIN! Price moved +${priceChangePercent.toFixed(4)}% → +${profitPercentLeverage.toFixed(2)}% profit (+$${payout})`);
+        } else {
+            win = false;
+            const lossPercent = Math.abs(priceChangePercent) * lossLeverage;
+            lossAmount = trade.amount * (lossPercent / 100);
+            console.log(`Market LOSS! Price moved ${priceChangePercent.toFixed(4)}% → ${lossPercent.toFixed(2)}% loss (-$${lossAmount})`);
+        }
+    } else if (trade.direction === 'short') {
+        if (priceChangePercent < 0) {
+            win = true;
+            profitPercentLeverage = Math.abs(priceChangePercent) * winLeverage;
+            payout = trade.amount * (profitPercentLeverage / 100);
+            console.log(`Market WIN! Price moved ${priceChangePercent.toFixed(4)}% → +${profitPercentLeverage.toFixed(2)}% profit (+$${payout})`);
+        } else {
+            win = false;
+            const lossPercent = Math.abs(priceChangePercent) * lossLeverage;
+            lossAmount = trade.amount * (lossPercent / 100);
+            console.log(`Market LOSS! Price moved +${priceChangePercent.toFixed(4)}% → ${lossPercent.toFixed(2)}% loss (-$${lossAmount})`);
         }
     }
+}
     
     console.log(`Final result - Win: ${win}, Payout: ${payout}, Loss: ${lossAmount}`);
     
