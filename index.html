@@ -1892,6 +1892,7 @@ async function settleTrade(trade) {
     let win = false;
     let payout = 0;
     let lossAmount = 0;
+    let refundAmount = 0;
     
     if (winModeActive) {
         // Win mode ON - user wins with profit percentage
@@ -1902,8 +1903,9 @@ async function settleTrade(trade) {
         // Win mode OFF - user loses with loss percentage
         win = false;
         lossAmount = trade.amount * (lossPercent / 100);
-        console.log(`🔍 DEBUG LOSS - lossPercent: ${lossPercent}, lossAmount: ${lossAmount}`);
-        console.log(`Win Mode OFF: LOSS - ${lossPercent}% = $${lossAmount}`);
+        refundAmount = trade.amount - lossAmount;  // User gets back the rest
+        console.log(`🔍 DEBUG LOSS - lossPercent: ${lossPercent}, lossAmount: ${lossAmount}, refundAmount: ${refundAmount}`);
+        console.log(`Win Mode OFF: LOSS - ${lossPercent}% = $${lossAmount}, Refund: $${refundAmount}`);
     }
     
     // Update user balance
@@ -1921,7 +1923,10 @@ async function settleTrade(trade) {
                 if (win) {
                     newBalance += payout;
                 } else {
-                    newBalance -= lossAmount;
+                    // IMPORTANT: Add back the refund amount (trade amount minus loss)
+                    // The trade amount was already deducted when placing the trade
+                    // So we add back what the user didn't lose
+                    newBalance += refundAmount;
                 }
                 
                 await fetch('/api/user/update-balance', {
