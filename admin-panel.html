@@ -315,15 +315,26 @@ input[type="range"]::-webkit-slider-thumb {
         <span style="color: #6b7280;">ON</span>
     </div>
     
+    <!-- Win Profit Percentage Slider -->
     <div id="profitControl" style="display: none; margin-top: 15px;">
-        <div style="color: #6b7280; font-size: 12px; margin-bottom: 5px;">Profit Percentage</div>
+        <div style="color: #6b7280; font-size: 12px; margin-bottom: 5px;">Win Profit Percentage</div>
         <div style="display: flex; align-items: center; gap: 10px;">
-            <input type="range" id="profitPercent" min="1" max="100" step="1" value="2" style="flex: 1;">
-            <span id="profitValue" style="color: #10b981; font-weight: bold;">2%</span>
+            <input type="range" id="profitPercent" min="1" max="100" step="1" value="12" style="flex: 1;">
+            <span id="profitValue" style="color: #10b981; font-weight: bold;">12%</span>
         </div>
     </div>
     
-    <div id="winModeStatus" style="font-size: 12px; margin-top: 8px; color: #ef4444;">📊 Market decides</div>
+    <!-- Loss Percentage Slider -->
+    <div id="lossControl" style="display: block; margin-top: 15px;">
+        <div style="color: #6b7280; font-size: 12px; margin-bottom: 5px;">Loss Percentage (When Win Mode OFF)</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <input type="range" id="lossPercent" min="1" max="100" step="1" value="5" style="flex: 1;">
+            <span id="lossValue" style="color: #ef4444; font-weight: bold;">5%</span>
+        </div>
+        <div style="font-size: 10px; color: #6b7280; margin-top: 5px;">User keeps (100% - loss%) of their trade amount</div>
+    </div>
+    
+    <div id="winModeStatus" style="font-size: 12px; margin-top: 8px; color: #ef4444;">📊 WIN MODE OFF - Trades lose 5% (keep 95%)</div>
 </div>
 
 <!-- Search Bar -->
@@ -625,81 +636,108 @@ input[type="range"]::-webkit-slider-thumb {
             }
         }
 
-        // Win Mode functionality
-        const winModeToggle = document.getElementById('winModeToggle');
-        const profitControl = document.getElementById('profitControl');
-        const profitPercent = document.getElementById('profitPercent');
-        const profitValue = document.getElementById('profitValue');
-        const winModeStatus = document.getElementById('winModeStatus');
+        // Win Mode - Load from server and save to server
+const winModeToggle = document.getElementById('winModeToggle');
+const profitControl = document.getElementById('profitControl');
+const profitPercent = document.getElementById('profitPercent');
+const profitValue = document.getElementById('profitValue');
+const lossPercent = document.getElementById('lossPercent');
+const lossValue = document.getElementById('lossValue');
+const winModeStatus = document.getElementById('winModeStatus');
 
-        async function loadWinMode() {
-            try {
-                const response = await fetch('/api/admin/win-mode');
-                const data = await response.json();
-                if (data.success) {
-                    winModeToggle.checked = data.winMode;
-                    profitPercent.value = data.profitPercent;
-                    profitValue.innerHTML = data.profitPercent + '%';
-                    if (data.winMode) {
-                        profitControl.style.display = 'block';
-                        winModeStatus.innerHTML = `✅ WIN MODE ON - All trades win with +${data.profitPercent}% profit`;
-                        winModeStatus.style.color = '#10b981';
-                    } else {
-                        profitControl.style.display = 'none';
-                        winModeStatus.innerHTML = '📊 Market decides outcome';
-                        winModeStatus.style.color = '#ef4444';
-                    }
-                }
-            } catch (error) {
-                console.log('Error loading win mode:', error);
-            }
-        }
-
-        async function saveWinMode(winMode, profitPercentVal) {
-            try {
-                const response = await fetch('/api/admin/win-mode', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ winMode, profitPercent: profitPercentVal })
-                });
-                return await response.json();
-            } catch (error) {
-                console.log('Error saving win mode:', error);
-                return { success: false };
-            }
-        }
-
-        profitPercent.addEventListener('input', function() {
-            const value = this.value;
-            profitValue.innerHTML = value + '%';
-            if (winModeToggle.checked) {
-                saveWinMode(true, parseInt(value));
-                winModeStatus.innerHTML = `✅ WIN MODE ON - All trades win with +${value}% profit`;
-            }
-        });
-
-        winModeToggle.addEventListener('change', async function() {
-            const isOn = this.checked;
-            const profit = parseInt(profitPercent.value);
-            const result = await saveWinMode(isOn, profit);
-            if (result.success) {
-                if (isOn) {
-                    profitControl.style.display = 'block';
-                    winModeStatus.innerHTML = `✅ WIN MODE ON - All trades win with +${profit}% profit`;
-                    winModeStatus.style.color = '#10b981';
-                } else {
-                    profitControl.style.display = 'none';
-                    winModeStatus.innerHTML = '📊 Market decides outcome';
-                    winModeStatus.style.color = '#ef4444';
-                }
+// Load current settings from server
+async function loadWinMode() {
+    try {
+        const response = await fetch('/api/admin/win-mode');
+        const data = await response.json();
+        
+        if (data.success) {
+            winModeToggle.checked = data.winMode;
+            profitPercent.value = data.profitPercent || 12;
+            profitValue.innerHTML = (data.profitPercent || 12) + '%';
+            lossPercent.value = data.lossPercent || 5;
+            lossValue.innerHTML = (data.lossPercent || 5) + '%';
+            
+            if (data.winMode) {
+                profitControl.style.display = 'block';
+                winModeStatus.innerHTML = `✅ WIN MODE ON - Trades win with +${data.profitPercent}% profit`;
+                winModeStatus.style.color = '#10b981';
             } else {
-                this.checked = !isOn;
-                alert('Failed to save win mode setting');
+                profitControl.style.display = 'none';
+                winModeStatus.innerHTML = `📊 WIN MODE OFF - Trades lose ${data.lossPercent}% (keep ${100 - data.lossPercent}%)`;
+                winModeStatus.style.color = '#ef4444';
             }
-        });
+        }
+    } catch (error) {
+        console.log('Error loading win mode:', error);
+    }
+}
 
-        // Load everything when page opens
-        loadWinMode();
+// Save win mode to server
+async function saveWinMode(winMode, profitPercentVal, lossPercentVal) {
+    try {
+        const response = await fetch('/api/admin/win-mode', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                winMode: winMode, 
+                profitPercent: profitPercentVal,
+                lossPercent: lossPercentVal
+            })
+        });
+        return await response.json();
+    } catch (error) {
+        console.log('Error saving win mode:', error);
+        return { success: false };
+    }
+}
+
+// Update profit value display when slider moves
+profitPercent.addEventListener('input', function() {
+    const value = this.value;
+    profitValue.innerHTML = value + '%';
+    if (winModeToggle.checked) {
+        saveWinMode(true, parseInt(value), parseInt(lossPercent.value));
+        winModeStatus.innerHTML = `✅ WIN MODE ON - Trades win with +${value}% profit`;
+    }
+});
+
+// Update loss value display when slider moves
+lossPercent.addEventListener('input', function() {
+    const value = this.value;
+    lossValue.innerHTML = value + '%';
+    if (!winModeToggle.checked) {
+        saveWinMode(false, parseInt(profitPercent.value), parseInt(value));
+        winModeStatus.innerHTML = `📊 WIN MODE OFF - Trades lose ${value}% (keep ${100 - value}%)`;
+    }
+});
+
+// Handle toggle change
+winModeToggle.addEventListener('change', async function() {
+    const isOn = this.checked;
+    const winProfit = parseInt(profitPercent.value);
+    const lossPct = parseInt(lossPercent.value);
+    
+    const result = await saveWinMode(isOn, winProfit, lossPct);
+    
+    if (result.success) {
+        if (isOn) {
+            profitControl.style.display = 'block';
+            winModeStatus.innerHTML = `✅ WIN MODE ON - Trades win with +${winProfit}% profit`;
+            winModeStatus.style.color = '#10b981';
+        } else {
+            profitControl.style.display = 'none';
+            winModeStatus.innerHTML = `📊 WIN MODE OFF - Trades lose ${lossPct}% (keep ${100 - lossPct}%)`;
+            winModeStatus.style.color = '#ef4444';
+        }
+    } else {
+        this.checked = !isOn;
+        alert('Failed to save win mode setting');
+    }
+});
+
+// Load settings when page loads
+loadWinMode();
         loadUsers();
     </script>
 </body>
