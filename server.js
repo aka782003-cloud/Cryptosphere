@@ -47,7 +47,7 @@ const client = new MongoClient(url);
 const dbName = 'cryptosphere';
 
 // Win Mode settings - stored in database
-let winModeCache = { winMode: false, profitPercent: 2 };
+let winModeCache = { winMode: false, profitPercent: 12, lossPercent: 5 };
 
 // Load win mode from database on startup
 async function loadWinModeFromDB() {
@@ -58,31 +58,58 @@ async function loadWinModeFromDB() {
         if (winModeSetting) {
             winModeCache = {
                 winMode: winModeSetting.winMode,
-                profitPercent: winModeSetting.profitPercent || 2
+                profitPercent: winModeSetting.profitPercent || 12,
+                lossPercent: winModeSetting.lossPercent || 5
             };
         }
-        console.log(`✅ Loaded win mode from DB: ${winModeCache.winMode ? 'ON' : 'OFF'} (${winModeCache.profitPercent}%)`);
+        console.log(`✅ Loaded win mode from DB: ${winModeCache.winMode ? 'ON' : 'OFF'} (Win: ${winModeCache.profitPercent}%, Loss: ${winModeCache.lossPercent}%)`);
     } catch (error) {
         console.log('Error loading win mode:', error);
     }
 }
 
 // Save win mode to database
-async function saveWinModeToDB(winMode, profitPercent) {
+async function saveWinModeToDB(winMode, profitPercent, lossPercent) {
     try {
         const db = client.db(dbName);
         const settings = db.collection('settings');
         await settings.updateOne(
             { key: 'winMode' },
-            { $set: { winMode: winMode, profitPercent: profitPercent, updatedAt: new Date() } },
+            { $set: { 
+                winMode: winMode, 
+                profitPercent: profitPercent, 
+                lossPercent: lossPercent,
+                updatedAt: new Date() 
+            } },
             { upsert: true }
         );
-        winModeCache = { winMode, profitPercent };
-        console.log(`💾 Saved win mode to DB: ${winMode ? 'ON' : 'OFF'} (${profitPercent}%)`);
+        winModeCache = { winMode, profitPercent, lossPercent };
+        console.log(`💾 Saved win mode to DB: ${winMode ? 'ON' : 'OFF'} (Win: ${profitPercent}%, Loss: ${lossPercent}%)`);
     } catch (error) {
         console.log('Error saving win mode:', error);
     }
 }
+
+// Get win mode status (anyone can see)
+app.get('/api/admin/win-mode', (req, res) => {
+    res.json({ 
+        success: true, 
+        winMode: winModeCache.winMode, 
+        profitPercent: winModeCache.profitPercent,
+        lossPercent: winModeCache.lossPercent
+    });
+});
+
+// Set win mode (only admin can change)
+app.post('/api/admin/win-mode', async (req, res) => {
+    if (!req.session.admin) {
+        return res.json({ success: false, message: 'Not authorized' });
+    }
+    const { winMode, profitPercent, lossPercent } = req.body;
+    await saveWinModeToDB(winMode, profitPercent, lossPercent);
+    console.log(`Win mode set to: ${winMode ? 'ON' : 'OFF'} (Win: ${profitPercent}%, Loss: ${lossPercent}%)`);
+    res.json({ success: true });
+});
 
 // Serve your HTML file
 app.get('/', (req, res) => {
