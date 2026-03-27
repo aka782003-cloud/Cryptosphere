@@ -1957,9 +1957,11 @@ async function settleTrade(trade) {
     if (win) {
         trade.payout = payout;
         trade.profitPercent = profitPercent;
+        trade.actualLoss = 0;
     } else {
         trade.payout = 0;
         trade.profitPercent = -lossPercent;
+        trade.actualLoss = lossAmount;  // Store the actual loss amount
     }
     
     // Add to history
@@ -1997,7 +1999,7 @@ function displayTradeHistory() {
     
     tradeHistory.slice(0, 20).forEach(trade => {
         const resultColor = trade.result === 'win' ? '#10b981' : '#ef4444';
-        const resultText = trade.result === 'win' ? `WIN +$${trade.payout.toFixed(2)}` : `LOSS -$${trade.amount}`;
+        const resultText = trade.result === 'win' ? `WIN +$${trade.payout.toFixed(2)}` : `LOSS -$${trade.actualLoss ? trade.actualLoss.toFixed(2) : trade.amount}`;
         const directionText = trade.direction === 'long' ? 'BUY' : 'SELL';
         
         const div = document.createElement('div');
@@ -2041,7 +2043,8 @@ async function loadTradesFromDB() {
                 time: t.time,
                 result: t.result,
                 status: t.status,
-                savedAt: t.savedAt
+                savedAt: t.savedAt,
+                actualLoss: t.actualLoss || 0
             }));
             
             console.log(`Loaded ${tradeHistory.length} trades from database`);
@@ -2082,7 +2085,7 @@ function showTradeDetails(trade) {
     const directionColor = trade.direction === 'long' ? '#10b981' : '#ef4444';
     const directionText = trade.direction === 'long' ? 'BUY / LONG' : 'SELL / SHORT';
     const resultColor = trade.result === 'win' ? '#10b981' : '#ef4444';
-    const resultText = trade.result === 'win' ? `+${trade.payout.toFixed(2)} USDT` : `-${trade.amount.toFixed(2)} USDT`;
+    const resultText = trade.result === 'win' ? `+${trade.payout.toFixed(2)} USDT` : `-${(trade.actualLoss ? trade.actualLoss : trade.amount).toFixed(2)} USDT`;
     
     // Format date
     const tradeDate = new Date(trade.savedAt || trade.startTime || Date.now());
@@ -2093,7 +2096,7 @@ function showTradeDetails(trade) {
     if (trade.result === 'win') {
         profitRate = ((trade.payout - trade.amount) / trade.amount * 100).toFixed(2);
     } else {
-        profitRate = -100;
+        profitRate = -(trade.actualLoss ? trade.actualLoss / trade.amount * 100 : 100).toFixed(2);
     }
     
     document.getElementById('tradeDetailContent').innerHTML = `
