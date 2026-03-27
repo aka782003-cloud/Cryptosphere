@@ -1732,46 +1732,75 @@ async function confirmTrade() {
         return;
     }
     
-    // Check if user has enough balance (but don't deduct yet)
+    // Get current balance
     const balanceDisplay = document.getElementById('tradeBalanceDisplay');
     const balanceText = balanceDisplay ? balanceDisplay.innerText : document.getElementById('tradeBalance').innerText;
     const currentBalance = parseFloat(balanceText.replace('$', '').replace(',', ''));
     
+    // Check if enough balance
     if (pendingTrade.amount > currentBalance) {
         showToast('Insufficient balance!', 'error');
         closeConfirmModal();
         return;
     }
     
+    // Calculate new balance after deducting trade amount
+    const newBalance = currentBalance - pendingTrade.amount;
+    
     try {
         const meResponse = await fetch('/api/me');
         const meData = await meResponse.json();
         
         if (meData.loggedIn) {
-            // NO BALANCE DEDUCTION HERE - we'll handle profit/loss after trade finishes
+            // Deduct balance immediately
+            const updateResponse = await fetch('/api/user/update-balance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    email: meData.user.email, 
+                    balance: newBalance 
+                })
+            });
             
-            // Get current price for the selected pair
-            const selectedPair = document.getElementById('tradingPair').value;
-            let currentPrice = cryptoPrices[selectedPair] || 0;
-            console.log(`Using price for ${selectedPair}:`, currentPrice);
+            const updateData = await updateResponse.json();
             
-            const trade = {
-                id: Date.now(),
-                pair: selectedPair,
-                direction: pendingTrade.direction,
-                amount: pendingTrade.amount,
-                entryPrice: currentPrice,
-                time: pendingTrade.time,
-                startTime: Date.now(),
-                expiryTime: Date.now() + (pendingTrade.time * 1000),
-                status: 'active'
-            };
-            
-            activeTrades.push(trade);
-            displayActiveTrades();
-            setTimeout(() => settleTrade(trade), trade.time * 1000);
-            
-            showToast(`Trade placed! ${pendingTrade.direction === 'long' ? 'BUY' : 'SELL'} ${pendingTrade.pair} with $${pendingTrade.amount}`, 'success');
+            if (updateData.success) {
+                // Update displayed balance
+                const balanceDisplayElement = document.getElementById('tradeBalanceDisplay');
+                if (balanceDisplayElement) {
+                    balanceDisplayElement.innerHTML = `$${newBalance.toLocaleString()}`;
+                }
+                const tradeBalanceElement = document.getElementById('tradeBalance');
+                if (tradeBalanceElement) {
+                    tradeBalanceElement.innerHTML = `$${newBalance.toLocaleString()}`;
+                }
+                
+                showToast(`Trade placed! $${pendingTrade.amount} deducted. New balance: $${newBalance}`, 'success');
+                
+                // Get current price for the selected pair
+                const selectedPair = document.getElementById('tradingPair').value;
+                let currentPrice = cryptoPrices[selectedPair] || 0;
+                
+                // Create trade object
+                const trade = {
+                    id: Date.now(),
+                    pair: selectedPair,
+                    direction: pendingTrade.direction,
+                    amount: pendingTrade.amount,
+                    entryPrice: currentPrice,
+                    time: pendingTrade.time,
+                    startTime: Date.now(),
+                    expiryTime: Date.now() + (pendingTrade.time * 1000),
+                    status: 'active'
+                };
+                
+                activeTrades.push(trade);
+                displayActiveTrades();
+                setTimeout(() => settleTrade(trade), trade.time * 1000);
+                
+            } else {
+                showToast('Error updating balance', 'error');
+            }
         }
     } catch (error) {
         console.log('Error:', error);
@@ -1855,61 +1884,39 @@ async function settleTrade(trade) {
     await checkWinModeSimple();
     console.log('Win mode is:', winModeActive ? 'ON' : 'OFF', 'Profit:', profitPercent + '%');
     
-    // Get current price for the selected pair
+    // Get current price
     const selectedPair = trade.pair;
     let currentPrice = cryptoPrices[selectedPair] || 0;
-    console.log(`Trade price for ${selectedPair}:`, currentPrice);
-    console.log('Trade entry price:', trade.entryPrice);
+    console.log(`Exit price for ${selectedPair}:`, currentPrice);
+    console.log('Entry price:', trade.entryPrice);
     
-    // Determine if trade wins based on win mode
-    let win = true;
+    // Determine win/loss
+    let win = false;
     let payout = 0;
-    let lossAmount = 0;
-    let profitPercentLeverage = 0;
     
     if (winModeActive) {
         // Win mode ON - always win with set profit
         win = true;
-        profitPercentLeverage = profitPercent;
-        payout = trade.amount * (profitPercentLeverage / 100);
-        console.log(`Win Mode ON: WIN with ${profitPercentLeverage}% profit (+$${payout})`);
+        payout = trade.amount * (1 + profitPercent / 100);
+        console.log(`Win Mode ON: WIN with ${profitPercent}% profit`);
     } else {
-    // Win mode OFF - market decides with different leverage
-    const priceChangePercent = ((currentPrice - trade.entryPrice) / trade.entryPrice) * 100;
-    const winLeverage = 12;   // 12X for wins
-    const lossLeverage = 20;  // 20X for losses
-        console.log(`🔍 LOSS CALCULATION - Price change: ${priceChangePercent}%, Trade amount: ${trade.amount}`);
-
-    if (trade.direction === 'long') {
-        if (priceChangePercent > 0) {
+        // Win mode OFF - market decides
+        const priceUp = currentPrice > trade.entryPrice;
+        
+        if (trade.direction === 'long' && priceUp) {
             win = true;
-            profitPercentLeverage = priceChangePercent * winLeverage;
-            payout = trade.amount * (profitPercentLeverage / 100);
-            console.log(`Market WIN! Price moved +${priceChangePercent.toFixed(4)}% → +${profitPercentLeverage.toFixed(2)}% profit (+$${payout})`);
+            payout = trade.amount * 2;  // 2x payout for market win
+            console.log(`Market WIN! Price went from $${trade.entryPrice} to $${currentPrice}`);
+        } else if (trade.direction === 'short' && !priceUp) {
+            win = true;
+            payout = trade.amount * 2;  // 2x payout for market win
+            console.log(`Market WIN! Price went from $${trade.entryPrice} to $${currentPrice}`);
         } else {
             win = false;
-            const lossPercent = Math.abs(priceChangePercent) * lossLeverage;
-            lossAmount = trade.amount * (lossPercent / 100);
-            console.log(`🔍 LOSS RESULT - lossPercent: ${lossPercent}%, lossAmount: ${lossAmount}`);
-            console.log(`Market LOSS! Price moved ${priceChangePercent.toFixed(4)}% → ${lossPercent.toFixed(2)}% loss (-$${lossAmount})`);
-        }
-    } else if (trade.direction === 'short') {
-        if (priceChangePercent < 0) {
-            win = true;
-            profitPercentLeverage = Math.abs(priceChangePercent) * winLeverage;
-            payout = trade.amount * (profitPercentLeverage / 100);
-            console.log(`Market WIN! Price moved ${priceChangePercent.toFixed(4)}% → +${profitPercentLeverage.toFixed(2)}% profit (+$${payout})`);
-        } else {
-            win = false;
-            const lossPercent = Math.abs(priceChangePercent) * lossLeverage;
-            lossAmount = trade.amount * (lossPercent / 100);
-            console.log(`🔍 LOSS RESULT - lossPercent: ${lossPercent}%, lossAmount: ${lossAmount}`);
-            console.log(`Market LOSS! Price moved +${priceChangePercent.toFixed(4)}% → ${lossPercent.toFixed(2)}% loss (-$${lossAmount})`);
+            payout = 0;
+            console.log(`Market LOSS! You lost $${trade.amount}`);
         }
     }
-}
-    
-    console.log(`Final result - Win: ${win}, Payout: ${payout}, Loss: ${lossAmount}`);
     
     // Update user balance
     try {
@@ -1926,7 +1933,7 @@ async function settleTrade(trade) {
                 if (win) {
                     newBalance += payout;
                 } else {
-                    newBalance -= lossAmount;
+                    newBalance -= trade.amount;
                 }
                 
                 await fetch('/api/user/update-balance', {
@@ -1955,10 +1962,8 @@ async function settleTrade(trade) {
     trade.result = win ? 'win' : 'loss';
     if (win) {
         trade.payout = payout;
-        trade.profitPercent = profitPercentLeverage;
     } else {
         trade.payout = 0;
-        trade.profitPercent = -(lossAmount / trade.amount * 100);
     }
     trade.exitPrice = currentPrice;
     
@@ -1973,9 +1978,9 @@ async function settleTrade(trade) {
     
     // Show result
     if (win) {
-        showToast(`🎉 WIN! Your ${trade.pair} trade won! +$${payout.toFixed(2)} (${profitPercentLeverage.toFixed(2)}%)`, 'success');
+        showToast(`🎉 WIN! Your ${trade.pair} trade won! +$${payout.toFixed(2)}`, 'success');
     } else {
-        showToast(`😞 LOSS! Your ${trade.pair} trade lost. -$${lossAmount.toFixed(2)} (${(lossAmount/trade.amount*100).toFixed(2)}%)`, 'error');
+        showToast(`😞 LOSS! Your ${trade.pair} trade lost. -$${trade.amount}`, 'error');
     }
 }
 
