@@ -17,7 +17,7 @@ app.use(express.json());
 // Configure multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, '/tmp/');
+        cb(null, './uploads/');
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Serve uploaded files (so admin can view them)
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(session({
     secret: 'cryptosphere-secret-key',
