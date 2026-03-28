@@ -688,29 +688,42 @@
                 white-space: nowrap;
             }
             
-            /* Market Table */
+                        /* Market Table - fits on screen */
             .market-table {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
+                overflow-x: hidden;
             }
             
             .market-row {
-                grid-template-columns: 40px 2fr 1.5fr 1.5fr 2fr;
-                padding: 10px 12px;
-                font-size: 11px;
-                gap: 6px;
-                min-width: 450px;
+                display: grid;
+                grid-template-columns: 28px 2fr 1.2fr 1.2fr 1.5fr;
+                padding: 8px 6px;
+                font-size: 9px;
+                gap: 3px;
+                min-width: auto;
             }
             
             .market-row.header {
                 display: grid !important;
-                font-size: 10px;
-                padding: 8px 12px;
+                font-size: 8px;
+                padding: 6px 6px;
+            }
+            
+            .market-row .coin-cell {
+                display: flex;
+                align-items: center;
+                gap: 4px;
             }
             
             .market-row .coin-cell img {
-                width: 20px;
-                height: 20px;
+                width: 16px;
+                height: 16px;
+            }
+            
+            /* Make text fit */
+            .market-row div {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             
             /* Coins Grid */
