@@ -3,10 +3,17 @@ console.log('🚀 Server is starting...');
 
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const { MongoClient } = require('mongodb');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const multer = require('multer');
+
+// Create uploads folder if it doesn't exist
+if (!fs.existsSync('./uploads')) {
+    fs.mkdirSync('./uploads');
+    console.log('📁 Created uploads folder');
+}
 
 // Create the server
 const app = express();
@@ -26,6 +33,13 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+// Create uploads folder if it doesn't exist
+const fs = require('fs');
+if (!fs.existsSync('./uploads')) {
+    fs.mkdirSync('./uploads');
+    console.log('📁 Created uploads folder');
+}
 
 // Serve uploaded files (so admin can view them)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
