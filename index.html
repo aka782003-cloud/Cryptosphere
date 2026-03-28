@@ -136,33 +136,33 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Bottom Navigation - BIGGER with NO EMOJIS */
+        /* Bottom Navigation */
         .bottom-nav {
-    position: fixed;
-    bottom: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1a1b1f;
-    border: 1px solid #2c2d33;
-    border-radius: 60px;
-    padding: 8px 16px;
-    display: flex;
-    gap: 10px;
-    z-index: 100;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1b1f;
+            border: 1px solid #2c2d33;
+            border-radius: 60px;
+            padding: 8px 16px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
 
         .nav-item {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px 35px;
+            padding: 12px 25px;
             border: none;
             background: transparent;
             color: #6b7280;
             cursor: pointer;
             border-radius: 50px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             transition: all 0.3s;
             letter-spacing: 0.5px;
@@ -295,7 +295,7 @@
             background: #1a1b1f;
             border: 1px solid #2c2d33;
             border-radius: 20px;
-            overflow: hidden;
+            overflow-x: auto;
             margin-top: 20px;
         }
 
@@ -306,6 +306,7 @@
             border-bottom: 1px solid #2c2d33;
             align-items: center;
             font-size: 15px;
+            min-width: 500px;
         }
 
         .market-row:last-child {
@@ -613,226 +614,222 @@
             }
         }
 
-        /* Responsive */
         /* Mobile Responsive */
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    /* Header */
-    .header {
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 15px;
-    }
-    
-    .logo-wrapper {
-        width: 100%;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .logo {
-        font-size: 24px !important;
-    }
-    
-    .auth-buttons {
-        gap: 8px;
-    }
-    
-    .auth-btn {
-        padding: 6px 12px;
-        font-size: 12px;
-    }
-    
-    .support-btn {
-        padding: 8px 16px;
-        font-size: 13px;
-        width: fit-content;
-        margin: 0 auto;
-    }
-    
-    /* Stats - 2x2 grid */
-    .stats {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        padding: 12px;
-        margin-bottom: 20px;
-    }
-    
-    .stat-item {
-        text-align: center;
-    }
-    
-    .stat-value {
-        font-size: 18px !important;
-    }
-    
-    .stat-label {
-        font-size: 10px !important;
-    }
-    
-    /* Bottom Navigation - make it fit */
-    .bottom-nav {
-        width: auto;
-        min-width: 280px;
-        padding: 6px 12px;
-        gap: 8px;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        right: auto;
-    }
-    
-    .nav-item {
-        padding: 8px 14px;
-        font-size: 13px;
-        white-space: nowrap;
-    }
-    
-    /* Trade page - order book below tabs */
-    #tradeSection > div {
-        flex-direction: column !important;
-    }
-    
-    #tradeSection > div > div:first-child {
-        width: 100% !important;
-        order: 1;
-    }
-    
-    #tradeSection > div > div:last-child {
-        width: 100% !important;
-        order: 2;
-        margin-top: 15px !important;
-    }
-    
-    /* Active & History tabs - make them clean */
-    #activePanel, #historyPanel {
-        font-size: 12px !important;
-    }
-    
-    /* Coins grid */
-    .coins-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-    
-    .coin-card {
-        padding: 12px;
-    }
-    
-    .coin-header {
-        gap: 10px;
-    }
-    
-    .coin-icon {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .coin-name h4 {
-        font-size: 14px;
-    }
-    
-    .coin-price {
-        font-size: 16px;
-    }
-    
-    .coin-change {
-        font-size: 12px;
-    }
-    
-    /* Market table */
-    .market-row {
-        grid-template-columns: 35px 1fr 1fr 1fr;
-        padding: 10px 12px;
-        font-size: 11px;
-        gap: 5px;
-    }
-    
-    .market-row.header {
-        display: none;
-    }
-    
-    .coin-cell img {
-        width: 20px;
-        height: 20px;
-    }
-    
-    /* Trade page buttons */
-    .amount-pct {
-        padding: 6px !important;
-        font-size: 11px !important;
-    }
-    
-    .time-btn {
-        padding: 8px !important;
-        font-size: 12px !important;
-    }
-    
-    #buyLongBtn, #sellShortBtn {
-        padding: 12px !important;
-        font-size: 14px !important;
-    }
-    
-    /* Price card */
-    .stats-grid {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 10px !important;
-    }
-    
-    .balance-card {
-        padding: 12px !important;
-    }
-    
-    /* Order book */
-    .orderBookContent {
-        max-height: 250px !important;
-    }
-    
-    /* Asset page */
-    .asset-row {
-        padding: 10px 12px !important;
-        font-size: 12px !important;
-    }
-    
-    .asset-info {
-        gap: 8px !important;
-    }
-    
-    .asset-icon {
-        width: 30px !important;
-        height: 30px !important;
-    }
-    
-    .asset-details h4 {
-        font-size: 13px !important;
-    }
-    
-    .asset-value .amount {
-        font-size: 13px !important;
-    }
-    
-    /* Modals */
-    .modal-content {
-        padding: 20px !important;
-        width: 95% !important;
-        max-width: 350px !important;
-    }
-    
-    .modal-content h2 {
-        font-size: 20px !important;
-    }
-    
-    .modal-content input {
-        padding: 10px !important;
-        font-size: 14px !important;
-    }
-    
-    .modal-content button {
-        padding: 12px !important;
-        font-size: 14px !important;
-    }
-}
+        @media (max-width: 768px) {
+            /* Header */
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .logo-wrapper {
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .logo {
+                font-size: 24px !important;
+            }
+            
+            .auth-buttons {
+                gap: 8px;
+            }
+            
+            .auth-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            .support-btn {
+                padding: 8px 16px;
+                font-size: 13px;
+                width: fit-content;
+                margin: 0 auto;
+            }
+            
+            /* Stats - 2x2 grid */
+            .stats {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                padding: 12px;
+                margin-bottom: 20px;
+            }
+            
+            .stat-item {
+                text-align: center;
+            }
+            
+            .stat-value {
+                font-size: 18px !important;
+            }
+            
+            .stat-label {
+                font-size: 10px !important;
+            }
+            
+            /* Bottom Navigation */
+            .bottom-nav {
+                width: auto;
+                min-width: 280px;
+                padding: 6px 12px;
+                gap: 6px;
+                bottom: 15px;
+            }
+            
+            .nav-item {
+                padding: 6px 12px;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+            
+            /* Market Table */
+            .market-table {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .market-row {
+                grid-template-columns: 40px 2fr 1.5fr 1.5fr 2fr;
+                padding: 10px 12px;
+                font-size: 11px;
+                gap: 6px;
+                min-width: 450px;
+            }
+            
+            .market-row.header {
+                display: grid !important;
+                font-size: 10px;
+                padding: 8px 12px;
+            }
+            
+            .market-row .coin-cell img {
+                width: 20px;
+                height: 20px;
+            }
+            
+            /* Coins Grid */
+            .coins-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .coin-card {
+                padding: 15px;
+            }
+            
+            .coin-header {
+                gap: 10px;
+            }
+            
+            .coin-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .coin-name h4 {
+                font-size: 16px;
+            }
+            
+            .coin-price {
+                font-size: 18px;
+            }
+            
+            .coin-change {
+                font-size: 12px;
+            }
+            
+            /* Trade page */
+            #tradeSection > div {
+                flex-direction: column !important;
+            }
+            
+            #tradeSection > div > div:first-child {
+                width: 100% !important;
+                order: 1;
+            }
+            
+            #tradeSection > div > div:last-child {
+                width: 100% !important;
+                order: 2;
+                margin-top: 15px !important;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+            }
+            
+            .balance-card {
+                padding: 12px !important;
+            }
+            
+            .amount-pct {
+                padding: 5px !important;
+                font-size: 10px !important;
+            }
+            
+            .time-btn {
+                padding: 6px !important;
+                font-size: 11px !important;
+            }
+            
+            #buyLongBtn, #sellShortBtn {
+                padding: 10px !important;
+                font-size: 13px !important;
+            }
+            
+            /* Active/History */
+            #activePanel, #historyPanel {
+                font-size: 12px !important;
+            }
+            
+            /* Asset page */
+            .asset-row {
+                padding: 10px 12px !important;
+                font-size: 12px !important;
+            }
+            
+            .asset-info {
+                gap: 8px !important;
+            }
+            
+            .asset-icon {
+                width: 32px !important;
+                height: 32px !important;
+            }
+            
+            .asset-details h4 {
+                font-size: 13px !important;
+            }
+            
+            .asset-value .amount {
+                font-size: 13px !important;
+            }
+            
+            /* Modals */
+            .modal-content {
+                padding: 20px !important;
+                width: 95% !important;
+                max-width: 350px !important;
+            }
+            
+            .modal-content h2 {
+                font-size: 20px !important;
+            }
+            
+            .modal-content input {
+                padding: 10px !important;
+                font-size: 14px !important;
+            }
+            
+            .modal-content button {
+                padding: 10px !important;
+                font-size: 14px !important;
+            }
+        }
     </style>
 </head>
 <body>
