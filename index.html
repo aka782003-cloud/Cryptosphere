@@ -615,29 +615,51 @@
 
         /* Responsive */
         /* Mobile Responsive */
+/* Mobile Responsive */
 @media (max-width: 768px) {
+    /* Header */
     .header {
         flex-direction: column;
-        gap: 15px;
+        gap: 10px;
+        margin-bottom: 15px;
     }
     
     .logo-wrapper {
         width: 100%;
         justify-content: space-between;
+        align-items: center;
     }
     
     .logo {
         font-size: 24px !important;
     }
     
+    .auth-buttons {
+        gap: 8px;
+    }
+    
+    .auth-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .support-btn {
+        padding: 8px 16px;
+        font-size: 13px;
+        width: fit-content;
+        margin: 0 auto;
+    }
+    
+    /* Stats - 2x2 grid */
     .stats {
-        flex-wrap: wrap;
-        padding: 15px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 10px;
+        padding: 12px;
+        margin-bottom: 20px;
     }
     
     .stat-item {
-        flex: 1 1 40%;
         text-align: center;
     }
     
@@ -649,35 +671,73 @@
         font-size: 10px !important;
     }
     
+    /* Bottom Navigation - make it fit */
+    .bottom-nav {
+        width: 95%;
+        padding: 6px 8px;
+        gap: 4px;
+        bottom: 10px;
+    }
+    
+    .nav-item {
+        padding: 8px 12px;
+        font-size: 13px;
+        min-width: 65px;
+    }
+    
+    /* Trade page - order book below tabs */
+    #tradeSection > div {
+        flex-direction: column !important;
+    }
+    
+    #tradeSection > div > div:first-child {
+        width: 100% !important;
+        order: 1;
+    }
+    
+    #tradeSection > div > div:last-child {
+        width: 100% !important;
+        order: 2;
+        margin-top: 15px !important;
+    }
+    
+    /* Active & History tabs - make them clean */
+    #activePanel, #historyPanel {
+        font-size: 12px !important;
+    }
+    
+    /* Coins grid */
     .coins-grid {
         grid-template-columns: 1fr;
         gap: 10px;
     }
     
     .coin-card {
-        padding: 15px;
+        padding: 12px;
+    }
+    
+    .coin-header {
+        gap: 10px;
     }
     
     .coin-icon {
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
+    }
+    
+    .coin-name h4 {
+        font-size: 14px;
     }
     
     .coin-price {
-        font-size: 18px;
+        font-size: 16px;
     }
     
-    .bottom-nav {
-        width: 95%;
-        padding: 6px;
-        gap: 5px;
-    }
-    
-    .nav-item {
-        padding: 8px 12px;
+    .coin-change {
         font-size: 12px;
     }
     
+    /* Market table */
     .market-row {
         grid-template-columns: 35px 1fr 1fr 1fr;
         padding: 10px 12px;
@@ -694,29 +754,7 @@
         height: 20px;
     }
     
-    /* Trade page mobile layout */
-    #tradeSection > div {
-        flex-direction: column !important;
-    }
-    
-    #tradeSection > div > div:first-child,
-    #tradeSection > div > div:last-child {
-        width: 100% !important;
-    }
-    
-    #tradeSection > div > div:last-child {
-        margin-top: 15px !important;
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 10px !important;
-    }
-    
-    .balance-card {
-        padding: 15px !important;
-    }
-    
+    /* Trade page buttons */
     .amount-pct {
         padding: 6px !important;
         font-size: 11px !important;
@@ -732,43 +770,45 @@
         font-size: 14px !important;
     }
     
+    /* Price card */
+    .stats-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+    }
+    
+    .balance-card {
+        padding: 12px !important;
+    }
+    
+    /* Order book */
     .orderBookContent {
         max-height: 250px !important;
     }
     
-    /* Price card on mobile */
-    #tradeSection > div:first-child > div:first-child > div {
-        flex-wrap: wrap !important;
-        gap: 10px !important;
-    }
-    
-    /* Active/History tabs */
-    #activePanel, #historyPanel {
+    /* Asset page */
+    .asset-row {
+        padding: 10px 12px !important;
         font-size: 12px !important;
     }
     
-    .asset-row {
-        padding: 12px 15px !important;
-        font-size: 13px !important;
-    }
-    
     .asset-info {
-        gap: 10px !important;
+        gap: 8px !important;
     }
     
     .asset-icon {
-        width: 35px !important;
-        height: 35px !important;
+        width: 30px !important;
+        height: 30px !important;
     }
     
     .asset-details h4 {
-        font-size: 14px !important;
+        font-size: 13px !important;
     }
     
     .asset-value .amount {
-        font-size: 14px !important;
+        font-size: 13px !important;
     }
     
+    /* Modals */
     .modal-content {
         padding: 20px !important;
         width: 95% !important;
@@ -776,51 +816,17 @@
     }
     
     .modal-content h2 {
-        font-size: 22px !important;
+        font-size: 20px !important;
     }
     
     .modal-content input {
-        padding: 12px !important;
-        font-size: 14px !important;
-    }
-    
-    /* Trade confirmation modal on mobile */
-    #confirmModal .modal-content {
-        max-width: 90% !important;
-        padding: 20px !important;
-    }
-    
-    #confirmModal .modal-content > div:first-child {
-        margin-bottom: 10px !important;
-    }
-    
-    #confirmModal .modal-content > div:last-child {
-        gap: 8px !important;
-    }
-    
-    #confirmModal .modal-content button {
         padding: 10px !important;
         font-size: 14px !important;
     }
     
-    /* Chart modal */
-    #chartModal .modal-content {
-        max-width: 95% !important;
-        padding: 15px !important;
-    }
-    
-    /* Trade details modal */
-    #tradeDetailModal .modal-content {
-        max-width: 95% !important;
-        padding: 15px !important;
-    }
-    
-    #tradeDetailModal .modal-content > div > div:first-child {
-        margin-bottom: 10px !important;
-    }
-    
-    #tradeDetailModal .modal-content > div > div:last-child {
+    .modal-content button {
         padding: 12px !important;
+        font-size: 14px !important;
     }
 }
     </style>
